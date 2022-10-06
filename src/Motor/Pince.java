@@ -6,13 +6,12 @@ import lejos.hardware.port.Port;
 
 
 
-public class Pince extends EV3MediumRegulatedMotor {
+public class Pince extends EV3MediumRegulatedMotor implements OuvrableContinue {
     
     private boolean estOuvert; // true si pince ouvert
-    private final double angleFermertureTT = 0.0;
-    private final double angleOuvertureTT = 90.0;
-    private final double angleFermerAvecPalet = 10.0; // lorsque les pinces ont saisie le palet
-    private final double angleOuvertureRelachePalet = 45.0; // un angle intéressant pour relacher le palet
+    private boolean paletEstAttraper; // true si les pince attrape un palet
+
+
     //private final static Port PORT_PINCE = ;
     /**
      * TODO 1: trouver le bon type de du port pour les pinces
@@ -27,15 +26,34 @@ public class Pince extends EV3MediumRegulatedMotor {
       */
     public Pince(String nomPort) {
         super(BrickFinder.getDefault().getPort(nomPort));
+        paletEstAttraper = false;
+        fermer();
     }
 
+    /**
+     * 
+     * @param angle
+     */
     public void ouvrir(double angle) {
         estOuvert = true;
     }
 
-
+    /**
+     * 
+     * @param angle
+     */
     public void fermer(double angle) {
         estOuvert = false;
+    }
+    
+    public void ouvrirSurPalet() {
+        fermer(angleOuvertureRelachePalet);
+        paletEstAttraper = false;
+    }
+
+    public void fermerSurPalet() {
+        fermer(angleFermerAvecPalet);
+        paletEstAttraper = true;
     }
 
     /**
@@ -46,6 +64,10 @@ public class Pince extends EV3MediumRegulatedMotor {
         return estOuvert;
     }
 
+    public boolean getPaletEstAttraper() {
+        return paletEstAttraper;
+    }
 }
+
 
 
