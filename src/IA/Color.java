@@ -23,4 +23,9 @@ class Color implements Sensor{
 	public void close() {
 		cs.close();
 	}
+	@Override
+	public void run(boolean run) {
+		// TODO Auto-generated method stub
+		
+	}
 }

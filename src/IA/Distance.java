@@ -9,11 +9,12 @@ import lejos.robotics.SampleProvider;
 class Distance implements Sensor{
 	float [] sampleDistance;
 	EV3UltrasonicSensor us;
+	SampleProvider distance;
 	 Distance(){
 		 Brick brick = BrickFinder.getDefault();
 		 Port s1 = brick.getPort("S1");
 		 us = new EV3UltrasonicSensor(s1);
-		 SampleProvider distance = us.getDistanceMode();
+		 distance = us.getDistanceMode();
 		 sampleDistance = new float[distance.sampleSize()];
 	}
 	 
@@ -24,5 +25,15 @@ class Distance implements Sensor{
 	@Override
 	public void close() {
 		us.close();
+	}
+
+	@Override
+	public void run(boolean run) {
+		Distance ds = new Distance();
+		while(run) {
+			ds.distance.fetchSample(sampleDistance, 0);
+		}
+		ds.close();
+		
 	}
 }
