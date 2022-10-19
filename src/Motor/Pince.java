@@ -1,58 +1,66 @@
-package Action;
-
 import lejos.hardware.*;
 import lejos.hardware.motor.EV3MediumRegulatedMotor;
 import lejos.hardware.port.Port;
 
-
-
 public class Pince extends EV3MediumRegulatedMotor implements OuvrableContinue {
-    
+
     private boolean estOuvert; // true si pince ouvert
     private boolean paletEstAttraper; // true si les pince attrape un palet
 
-
-    //private final static Port PORT_PINCE = ;
     /**
-     * TODO 1: trouver le bon type de du port pour les pinces
-     * TODO 2 : trouver les méthode permetant de faire bouger les pinces
-     * rotation ? avance ? 
-     * @param p
+     * 
+     * @param nomPort nom du port moteur ("A","B","C","D")
      */
-
-     /**
-      * 
-      * @param nomPort nom du port moteur ("A","B","C","D")
-      */
     public Pince(String nomPort) {
         super(BrickFinder.getDefault().getPort(nomPort));
         paletEstAttraper = false;
         fermer();
+        super.rotateTo(ANGLE_OUVERTURE_TT);
     }
 
     /**
      * 
-     * @param angle
      */
-    public void ouvrir(double angle) {
+    public void ouvrir() {
+        ouvrir(ANGLE_OUVERTURE_TT);
+    }
+
+    @Override
+    public void ouvrir(int angle) {
         estOuvert = true;
+        super.rotate(angle);
+
     }
 
     /**
      * 
-     * @param angle
+     * 
      */
-    public void fermer(double angle) {
+    public void fermer() {
+        fermer(ANGLE_FERMETURE_TT);
+    }
+
+    @Override
+    public void fermer(int angle) {
+        super.rotate(angle);
         estOuvert = false;
     }
-    
+
+    /**
+     * 
+     * 
+     */
     public void ouvrirSurPalet() {
-        fermer(angleOuvertureRelachePalet);
+        fermer(ANGLE_OUVERT_SANS_PALET);
         paletEstAttraper = false;
     }
 
+    /**
+     * 
+     * 
+     */
     public void fermerSurPalet() {
-        fermer(angleFermerAvecPalet);
+        fermer(ANGLE_OUVERT_AVEC_PALET);
         paletEstAttraper = true;
     }
 
@@ -64,10 +72,15 @@ public class Pince extends EV3MediumRegulatedMotor implements OuvrableContinue {
         return estOuvert;
     }
 
+    /**
+     * 
+     * @return true si palet attraper
+     */
     public boolean getPaletEstAttraper() {
         return paletEstAttraper;
     }
 }
+
 
 
 
