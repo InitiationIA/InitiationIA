@@ -17,7 +17,7 @@ class Distance implements Sensor{
 		 sampleDistance = new float[distance.sampleSize()];
 	}
 	 
-	 public float getValue(float[] sample) {
+	 public float getValue() {
 		    return sample[0];
 	}
 
