@@ -19,14 +19,10 @@ class Touch implements Sensor {
 		samplePressed=new boolean[touch.sampleSize()];
 	}
 
-	boolean getValue(boolean[] sample ) {
+	boolean getValue() {
 		return samplePressed[0];
 	}
 
-	@Override
-	public float getValue(float[] sample) {
-		return -1;
-	}
 
 	@Override
 	public void close() {
