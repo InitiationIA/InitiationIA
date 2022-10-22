@@ -1,6 +1,6 @@
 package IA;
 
 interface Sensor {
-	float getValue(float[] sample);	
+	float getValue();	
 	void close();
 }
