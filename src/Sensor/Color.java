@@ -17,7 +17,7 @@ class Color implements Sensor{
 		 SampleProvider csRGB = cs.getRGBMode();
 		 sampleColor = new float[csRGB.sampleSize()];
 	}
-	public float getValue(float[] sample) {
+	public float getValue() {
 		return sample[0]; 
 	}
 	public void close() {
