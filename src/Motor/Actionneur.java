@@ -46,14 +46,7 @@ public class Actionneur {
         pilot.setAngularAcceleration(accAng);
     }
 
-    public void stop(){
-        pilot.stop();
-    }
-
-    public boolean estEnDeplacement(){
-        return pilot.isMoving();
-    }
-    
+  
 
 	/*
 	 * avancer()
@@ -112,19 +105,48 @@ public class Actionneur {
 	    return chassis.getMaxAngularSpeed();
 	}  
 	  
+	
+	
+	public void arcAvant(double radius) {
+	    this.pilot.arcForward(radius);
+	  }
+
+	public void arcArriere(double radius) {
+		this.pilot.arcBackward(radius);
+	}
+
+	public void arcSimple(double radius, double angle) {
+		this.pilot.arc(radius, angle);
+	}
+
+	public void traverseArc(double radius, double distance) {
+		this.pilot.travelArc(radius, distance, false);
+	}
+
+	public void traverseArc(double radius, double distance, boolean immediateReturn) {
+		this.pilot.arc(radius,  distance / (2 * Math.PI), immediateReturn);
+	}
+
 	  
-	  
-	public void avancer(int dis) {
-		this.pilot.travel(dis);
-	}
-		
-	public void reculer(int dis) {
-		this.pilot.travel(dis);
-	}
-		
-	public boolean isMoving() {
-		return chassis.isMoving();
-	}
+	public void stop(){
+        	pilot.stop();
+    	}
+
+    	public boolean estEnDeplacement(){
+        	return pilot.isMoving();
+    	}
+    
+  	public void avancer(double dis) {
+  		this.pilot.travel(dis);
+  	}
+  		
+  	public void reculer(double dis) {
+  		this.pilot.travel(dis);
+  	}
+  	
+  	public void tourne(double ang) {
+  		this.pilot.rotate(ang);
+  	}
 	
 	
 	// differnetial pilot = movePilot
