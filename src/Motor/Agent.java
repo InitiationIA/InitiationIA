@@ -1,6 +1,5 @@
 package Action;
 
-import java.util.Scanner;
 
 import lejos.hardware.BrickFinder;
 import lejos.hardware.Button;
