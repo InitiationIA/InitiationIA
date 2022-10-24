@@ -2,6 +2,18 @@ package Action;
 
 import java.util.Scanner;
 
+import lejos.hardware.BrickFinder;
+import lejos.hardware.Button;
+import lejos.hardware.Sound;
+import lejos.hardware.ev3.LocalEV3;
+import lejos.hardware.lcd.Font;
+import lejos.hardware.lcd.GraphicsLCD;
+import lejos.hardware.lcd.Image;
+import lejos.hardware.motor.Motor;
+import lejos.hardware.motor.NXTRegulatedMotor;
+import lejos.hardware.port.UARTPort;
+import lejos.utility.Delay;
+
 import org.jfree.ui.tabbedui.TabbedApplet;
 import org.jfree.util.Rotation;
 
@@ -19,19 +31,6 @@ public class Agent {
 	//private final boolean[] sample;
 	
 	public Agent() {
-		
-	}
-	/*
-	
-	public displayQuestion() {
-		Scanner s = new Scanner(System.in);
-		System.out.println("De quel coté du terrain êtes-vous ?: ");
-	}
-	*/
-	
-	// spécifie la position de départ: gauche, milieu, droite.
-	public void specifiePosition(String pos) {
-		
 		
 	}
 	
