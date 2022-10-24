@@ -1,4 +1,4 @@
-package IA;
+package Sensor;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
