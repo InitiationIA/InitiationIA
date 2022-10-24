@@ -7,25 +7,23 @@ import lejos.hardware.sensor.EV3TouchSensor;
 import lejos.robotics.SampleProvider;
 
 
-class Touch implements Sensor {
+class Touch {
 	float[] samplePressed;
 	EV3TouchSensor ts;
+	SampleProvider touch;
 
 	public Touch() {
 		Brick brick = BrickFinder.getDefault();
 		Port s3 = brick.getPort("S3");
 		ts = new EV3TouchSensor(s3);
-		SampleProvider touch = ts.getTouchMode();
+		touch = ts.getTouchMode();
 		samplePressed=new float[touch.sampleSize()];
 	}
 
 	public float getValue() {
+		touch.fetchSample(samplePressed, 0);
 		return samplePressed[0];
 	}
 
 
-	@Override
-	public void close() {
-		ts.close();
-	}
 }

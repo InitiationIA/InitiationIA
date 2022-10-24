@@ -11,7 +11,7 @@ import lejos.hardware.port.MotorPort;
 import lejos.robotics.RegulatedMotor;
 import lejos.utility.Delay;
 
-class CameraInfrarouge implements Sensor {
+class CameraInfrarouge  {
 	protected String sampleRed;
 	protected DatagramSocket dsocket;
 	protected String[] tabSampleRed;
@@ -40,8 +40,11 @@ class CameraInfrarouge implements Sensor {
 		}
 	}
 
-	public float getValue() {
-		return -1;
+	public void getValue() throws IOException {
+		packet.setLength(buffer.length);
+		dsocket.receive(packet);
+		sampleRed = new String(buffer, 0, packet.getLength());
+		tabSampleRed = sampleRed.split("\n");
 	}
 
 	public void close() {
@@ -49,12 +52,6 @@ class CameraInfrarouge implements Sensor {
 
 	}
 
-	public void getData() throws IOException {
-		packet.setLength(buffer.length);
-		dsocket.receive(packet);
-		sampleRed = new String(buffer, 0, packet.getLength());
-		tabSampleRed = sampleRed.split("\n");
-	}
 
 	static int findMySelf(String[] tabSampleRed) {
 		int id = 0;
@@ -123,7 +120,7 @@ class CameraInfrarouge implements Sensor {
 				Delay.msDelay(100);
 				//cir.getData();
 			System.out.println(angle);
-				tc.touch.fetchSample(tc.samplePressed, 0);
+				tc.getValue();
 			} catch (Exception e) {
 				continue;
 			}
@@ -131,9 +128,4 @@ class CameraInfrarouge implements Sensor {
 	}
 
 }
-
-	public void run(boolean run) {
-		// TODO Auto-generated method stub
-
-	}
 }
