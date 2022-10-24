@@ -139,6 +139,12 @@ public class Agent {
 		}
 	}
 	
+	/**
+	 * Demande à l'utilisateur de donner la position de départ pour le robot
+	 *  Bouton gauche/droit/milieu si le robot est sur la ligne de gauche/droit/milieu du terrain 
+	 *  au niveau de de la ligne blanche
+	 * @return Gauche ou Droite ou Milieu {@code String}
+	 */
 	public String getPositionDepart() {
 		GraphicsLCD g = BrickFinder.getDefault().getGraphicsLCD();
 
