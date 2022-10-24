@@ -1,4 +1,4 @@
-package IA;
+package Sensor;
 
 import lejos.hardware.Brick;
 import lejos.hardware.BrickFinder;
@@ -8,7 +8,7 @@ import lejos.robotics.SampleProvider;
 
 
 class Touch implements Sensor {
-	boolean[] samplePressed;
+	float[] samplePressed;
 	EV3TouchSensor ts;
 
 	public Touch() {
@@ -16,10 +16,10 @@ class Touch implements Sensor {
 		Port s3 = brick.getPort("S3");
 		ts = new EV3TouchSensor(s3);
 		SampleProvider touch = ts.getTouchMode();
-		samplePressed=new boolean[touch.sampleSize()];
+		samplePressed=new float[touch.sampleSize()];
 	}
 
-	boolean getValue() {
+	public float getValue() {
 		return samplePressed[0];
 	}
 
