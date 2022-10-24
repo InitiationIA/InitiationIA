@@ -31,23 +31,15 @@ public class Actionneur {
         pilot = new MovePilot(chassis);
     }
 
-    public Actionneur(double vitesseLin,double accelerationLin) {
-        wheel1 = WheeledChassis.modelWheel(Motor.A, 81.6).offset(-70);
-        wheel2 = WheeledChassis.modelWheel(Motor.D, 81.6).offset(70);
-        chassis = new WheeledChassis(new Wheel[] { wheel1, wheel2 }, WheeledChassis.TYPE_DIFFERENTIAL);
-        p = new Pince("A");
-        pilot = new MovePilot(chassis);
+    public Actionneur(double vitesseLin, double accelerationLin) {
+        this();
         pilot.setLinearSpeed(vitesseLin);
         pilot.setLinearAcceleration(accelerationLin);
 
     }
 
-    public Actionneur(double vitesseLin,double accLin,double vitesseAng,double accAng) {
-        wheel1 = WheeledChassis.modelWheel(Motor.A, 81.6).offset(-70);
-        wheel2 = WheeledChassis.modelWheel(Motor.D, 81.6).offset(70);
-        chassis = new WheeledChassis(new Wheel[] { wheel1, wheel2 }, WheeledChassis.TYPE_DIFFERENTIAL);
-        p = new Pince("A");
-        pilot = new MovePilot(chassis);
+    public Actionneur(double vitesseLin, double accLin, double vitesseAng, double accAng) {
+        this();
         pilot.setLinearSpeed(vitesseLin);
         pilot.setLinearAcceleration(accLin);
         pilot.setAngularSpeed(vitesseAng);
