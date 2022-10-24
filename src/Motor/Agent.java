@@ -141,19 +141,21 @@ public class Agent {
 	
 	public String getPositionDepart() {
 		GraphicsLCD g = BrickFinder.getDefault().getGraphicsLCD();
-		
-		g.drawString()
-		
-		int but = Button.waitForAnyPress(TITLE_DELAY);
+
+		g.drawString("Quelle est la position de depart?\n Bouton Gauche pour ligne Gauche\n 
+		Bouton Milieu pour ligne Milieu\n
+		Bouton Droit pour ligne Droit ",0,0,0); // valeur provisoire
+
+		int but = Button.waitForAnyPress(10000);
 		String pressed = "";
 		if (but == 0)
-                	pressed = "None";
+			pressed = "None";
 		else if ((but & Button.ID_ENTER) != 0)
-                	pressed += "Milieu";
-        	else if ((but & Button.ID_LEFT) != 0)
-                	pressed += "Gauche";
-    		else if ((but & Button.ID_RIGHT) != 0)
-                	pressed += "Droit";
+			pressed += "Milieu";
+		else if ((but & Button.ID_LEFT) != 0)
+			pressed += "Gauche";
+		else if ((but & Button.ID_RIGHT) != 0)
+			pressed += "Droit";
 		g.clear();
 		return pressed;
 	}
