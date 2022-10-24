@@ -1,4 +1,4 @@
-package IA;
+package Sensor;
 
 import lejos.hardware.Brick;
 import lejos.hardware.BrickFinder;
