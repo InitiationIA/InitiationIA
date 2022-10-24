@@ -148,13 +148,13 @@ public class Agent {
 		int but = Button.waitForAnyPress(TITLE_DELAY);
 		String pressed = "";
 		if (but == 0)
-                pressed = "None";
+                	pressed = "None";
 		else if ((but & Button.ID_ENTER) != 0)
-                pressed += "Milieu";
-        else if ((but & Button.ID_LEFT) != 0)
-                pressed += "Gauche";
-    	else if ((but & Button.ID_RIGHT) != 0)
-                pressed += "Droit";
+                	pressed += "Milieu";
+        	else if ((but & Button.ID_LEFT) != 0)
+                	pressed += "Gauche";
+    		else if ((but & Button.ID_RIGHT) != 0)
+                	pressed += "Droit";
 		g.clear();
 		return pressed;
 	}
