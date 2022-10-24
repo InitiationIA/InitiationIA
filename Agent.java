@@ -1,5 +1,3 @@
-package Action;
-
 import java.util.Scanner;
 
 import org.jfree.ui.tabbedui.TabbedApplet;
