@@ -1,4 +1,4 @@
-package IA;
+package Sensor;
 
 import lejos.hardware.Brick;
 import lejos.hardware.BrickFinder;
@@ -18,7 +18,7 @@ class Distance implements Sensor{
 	}
 	 
 	 public float getValue() {
-		    return sample[0];
+		    return sampleDistance[0];
 	}
 
 	@Override
