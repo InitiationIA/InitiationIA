@@ -1,23 +1,25 @@
-package Motor;
+package Action;
 
-import Sensor.Color;
-import Sensor.Distance;
-import Sensor.Touch;
+import java.util.Scanner;
+
+import org.jfree.ui.tabbedui.TabbedApplet;
+import org.jfree.util.Rotation;
+
 import lejos.hardware.BrickFinder;
 import lejos.hardware.Button;
 import lejos.hardware.lcd.GraphicsLCD;
 
 public class Agent {
 	
-	private final double VITESSELIN = 60.0;
-	private final double ACCLIN = 20.0;
-	private final double VITESSEANG = 20.0;
-	private final double ACCANG = 10.0;
-	private Pince p = new Pince("Nom_Port");
-	private Actionneur a = new Actionneur(VITESSELIN, ACCLIN, VITESSEANG, ACCANG);
-	private Touch t =  new Touch();
-	//private String[] position = {"gauche", "milieu", "droite"};
-	private Distance d = new Distance();
+	private final double vitesseLin = 200.0;
+	private final double accLin = 50.0;
+	private final double vitesseAng = 20.0;
+	private final double accAng = 10.0;
+	private final Pince p = new Pince("A");
+	private final Actionneur a = new Actionneur(vitesseLin, accLin, vitesseAng, accAng);
+	private final Touch t =  new Touch();
+	private final String[] position = {"gauche", "milieu", "droite"};
+	private final Distance d = new Distance();
 	//private final boolean[] sample;
 	
 	public Agent() {
@@ -45,13 +47,20 @@ public class Agent {
 		if (position.equals("Gauche"))
 			d = -20;
 		else if (position.equals("Milieu")) 
-			d = -20;
+			d = 200;
 		
-			
-		p.ouvrir(60);
-		a.avancer(VITESSELIN);
+		System.out.println(position);	
+		p.ouvrir(360*4);
+		a.avancer(600); // mm
+		p.fermer(-360*5);
+		a.traverseArc(600, d);
+		a.traverseArc(-400, d);
+		
+		// + avancer vers l'enbut (30 cm par rapport au mur)
+		
+		
 		// si touche
-		if (t.getValue() == 1) {
+		if (t.getValue() == 1) { // ça marche pas 
 			p.fermerSurPalet();				
 			a.traverseArc(d, 180);
 	
@@ -75,6 +84,7 @@ public class Agent {
 		
 		
 		while (true) {
+			c.cs.fetchSample(c.sampleColor, 0);
 			float[] tab = c.getValue();
 			if (tab[0]>=240 && tab[1]>=240 && tab[2]>=240) {
 				a.stop();
@@ -148,7 +158,7 @@ public class Agent {
 
 		g.drawString("Quelle est la position de depart?\n Bouton Gauche pour ligne Gauche\n Bouton Milieu pour ligne Milieu\nBouton Droit pour ligne Droit ",0,0,0); // valeur provisoire
 
-		int but = Button.waitForAnyPress(10000);
+		int but = Button.waitForAnyPress(1000000);
 		String pressed = "";
 		if (but == 0)
 			pressed = "None";
@@ -162,8 +172,14 @@ public class Agent {
 		return pressed;
 	}
 	
+	public void testPince() {
+		p.ouvrir(360*4); // ok
+		p.fermer(-360*5); // ok
+	}
+	
 	public static void main(String[] args) {
 		Agent ag = new Agent();
+		//ag.testPince();
 		ag.prendPremierPalet();
 	}
 
