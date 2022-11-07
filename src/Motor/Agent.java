@@ -52,7 +52,7 @@ public class Agent {
 		System.out.println(position);	
 		p.ouvrir(360*4);
 		a.avancer(600); // mm
-		p.fermer(-360*5);
+		p.fermer(-360*4);
 		a.traverseArc(600, d);
 		a.traverseArc(-400, d);
 		
@@ -101,18 +101,15 @@ public class Agent {
 	}
 	
 	// Sonar: trouver l'angle optimal (=le palet le plus proche)
-	public double cherchePalet() {
+		public double cherchePalet() {
 		
-		double angleOptimal = 0;
-		double angle =30;
-		double[] tab = new double[6];
-		
-		while (a.estEnDeplacement()) {
-			//je prends les mesures
-		}
-		
-		
-		int i = 0;
+		double distanceOptimal = 0;
+		//double angle =30;
+		float[] dist = new double[60];
+		float distance = 240;
+		int c = 0;
+				
+		/*int i = 0;
 		while (angle!=330) {
 			
 			a.tourne(angle);
@@ -123,26 +120,31 @@ public class Agent {
 		a.tourne(30);
 		tab[5] = d.getValue(); 
 		
-		double[] tabAngles = {30, 90, 150, 210, 270, 330};
-		double distance = 240;
-		for (int j = 0; j < tab.length; j++) {
-			if (tab[j] > 30 && tab[j] < distance) {
-				distance = tab[j];
-				angleOptimal = tabAngles[j];
-				
-			}
-				
-		}
-		return angleOptimal;
+		double[] tabAngles = {30, 90, 150, 210, 270, 330};*/
 		
+		a.tourne(180);
+		while(a.estEnDeplacement()) { // récuperer les mesures
+			dist[c] = d.getValue();
+			c++;
+		}
+		for (int j = 0; j < c; j++) { // récuperer le plus proche
+			if (dist[j] > 30 && dist[j] < distance) {
+				distanceOptimal = dist[j];
+				}
+		}
+		return distanceOptimal;		
 	}
 	
 	
 	public void orienteVersPalet() {
-		a.tourne(cherchePalet());
+		float dist  = a.cherchePalet();
+		a.tourne(180);
+		if(d.getValue() == dist) {
+			a.stop();
+		}
+		//a.tourne(cherchePalet());
 		a.avancer(Double.POSITIVE_INFINITY);
 	}
-	
 	public void recuperePalet() {
 		if (d.getValue() < 30)
 			return;
