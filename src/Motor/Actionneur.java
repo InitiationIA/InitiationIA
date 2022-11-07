@@ -1,4 +1,4 @@
-package Motor;
+package Action;
 /**
  * La classe qui agrège les actioneur : 
  *  -les pinces
@@ -6,6 +6,7 @@ package Motor;
  *
  */
 
+import lejos.hardware.BrickFinder;
 import lejos.hardware.motor.*;
 import lejos.robotics.chassis.*;
 //import lejos.hardware.port.*;
@@ -20,25 +21,26 @@ public class Actionneur {
     private final Wheel wheel1 ;
     private final Wheel wheel2 ;
     private final Chassis chassis ;
-    private final Pince p;  
+   // private final Pince p;  
     private final MovePilot pilot ;
 
     public Actionneur() {
-        wheel1 = WheeledChassis.modelWheel(Motor.A, 81.6).offset(-70);
-        wheel2 = WheeledChassis.modelWheel(Motor.D, 81.6).offset(70);
+    	
+        wheel1 = WheeledChassis.modelWheel(new EV3LargeRegulatedMotor(BrickFinder.getDefault().getPort("B")), 56).offset(-80);
+        wheel2 = WheeledChassis.modelWheel(new EV3LargeRegulatedMotor(BrickFinder.getDefault().getPort("C")), 56).offset(80);
         chassis = new WheeledChassis(new Wheel[] { wheel1, wheel2 }, WheeledChassis.TYPE_DIFFERENTIAL);
-        p = new Pince("A");
+       // p = new Pince("A");
         pilot = new MovePilot(chassis);
     }
 
-    public Actionneur(double vitesseLin, double accelerationLin) {
+    public Actionneur(double vitesseLin,double accelerationLin) {
         this();
         pilot.setLinearSpeed(vitesseLin);
         pilot.setLinearAcceleration(accelerationLin);
 
     }
 
-    public Actionneur(double vitesseLin, double accLin, double vitesseAng, double accAng) {
+    public Actionneur(double vitesseLin,double accLin,double vitesseAng,double accAng) {
         this();
         pilot.setLinearSpeed(vitesseLin);
         pilot.setLinearAcceleration(accLin);
@@ -46,15 +48,6 @@ public class Actionneur {
         pilot.setAngularAcceleration(accAng);
     }
 
-  
-
-	/*
-	 * avancer()
-	 * reculer()
-	 * rotation()
-	 * 
-	 */
-	
 	  
 	public double getAccelLigne() {
 	    return this.pilot.getLinearAcceleration();
@@ -127,14 +120,16 @@ public class Actionneur {
 		this.pilot.arc(radius,  distance / (2 * Math.PI), immediateReturn);
 	}
 
-	  
-	public void stop(){
-        	pilot.stop();
-    	}
 
-    	public boolean estEnDeplacement(){
-        	return pilot.isMoving();
-    	}
+
+	  
+    public void stop(){
+        pilot.stop();
+    }
+
+    public boolean estEnDeplacement(){
+        return pilot.isMoving();
+    }
     
   	public void avancer(double dis) {
   		this.pilot.travel(dis);
@@ -147,6 +142,11 @@ public class Actionneur {
   	public void tourne(double ang) {
   		this.pilot.rotate(ang);
   	}
+  	
+  
+  	
+  	
+		
 	
 	
 	// differnetial pilot = movePilot
