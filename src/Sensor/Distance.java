@@ -39,6 +39,7 @@ public class Distance {
 	}
 
 	public float getValue() {
+		this.trier();
 		distance.fetchSample(sampleDistance, 0);
 		return sampleDistance[0];
 	}
