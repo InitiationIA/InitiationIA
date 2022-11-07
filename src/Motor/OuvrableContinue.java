@@ -1,3 +1,5 @@
+package Motor;
+
 public interface OuvrableContinue {
 
     public final static int ANGLE_OUVERTURE_TT = 90;

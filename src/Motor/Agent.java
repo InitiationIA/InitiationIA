@@ -1,25 +1,23 @@
-package Action;
+package Motor;
 
-import java.util.Scanner;
-
-import org.jfree.ui.tabbedui.TabbedApplet;
-import org.jfree.util.Rotation;
-
+import Sensor.Color;
+import Sensor.Distance;
+import Sensor.Touch;
 import lejos.hardware.BrickFinder;
 import lejos.hardware.Button;
 import lejos.hardware.lcd.GraphicsLCD;
 
 public class Agent {
 	
-	private final double vitesseLin = 60.0;
-	private final double accLin = 20.0;
-	private final double vitesseAng = 20.0;
-	private final double accAng = 10.0;
-	private final Pince p = new Pince("Nom_Port");
-	private final Actionneur a = new Actionneur(vitesseLin, accLin, vitesseAng, accAng);
-	private final Touch t =  new Touch();
-	private final String[] position = {"gauche", "milieu", "droite"};
-	private final Distance d = new Distance();
+	private final double VITESSELIN = 60.0;
+	private final double ACCLIN = 20.0;
+	private final double VITESSEANG = 20.0;
+	private final double ACCANG = 10.0;
+	private Pince p = new Pince("Nom_Port");
+	private Actionneur a = new Actionneur(VITESSELIN, ACCLIN, VITESSEANG, ACCANG);
+	private Touch t =  new Touch();
+	//private String[] position = {"gauche", "milieu", "droite"};
+	private Distance d = new Distance();
 	//private final boolean[] sample;
 	
 	public Agent() {
@@ -51,7 +49,7 @@ public class Agent {
 		
 			
 		p.ouvrir(60);
-		a.avancer(vitesseLin);
+		a.avancer(VITESSELIN);
 		// si touche
 		if (t.getValue() == 1) {
 			p.fermerSurPalet();				
@@ -77,7 +75,6 @@ public class Agent {
 		
 		
 		while (true) {
-			c.cs.fetchSample(c.sampleColor, 0);
 			float[] tab = c.getValue();
 			if (tab[0]>=240 && tab[1]>=240 && tab[2]>=240) {
 				a.stop();
@@ -109,12 +106,12 @@ public class Agent {
 		while (angle!=330) {
 			
 			a.tourne(angle);
-			tab[i] = d.getDistance();
+			tab[i] = d.getValue();
 			angle+=60;
 			i++;
 		}
 		a.tourne(30);
-		tab[5] = d.getDistance(); 
+		tab[5] = d.getValue(); 
 		
 		double[] tabAngles = {30, 90, 150, 210, 270, 330};
 		double distance = 240;
@@ -137,7 +134,7 @@ public class Agent {
 	}
 	
 	public void recuperePalet() {
-		if (d.getDistance() < 30)
+		if (d.getValue() < 30)
 			return;
 		if (t.getValue() == 1) {
 			a.stop();

@@ -10,11 +10,11 @@ import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.SampleProvider;
 import lejos.utility.Delay;
 
-class Color{
+public class Color{
 	float[] sampleColor;
 	EV3ColorSensor cs;
 	SampleProvider csRGB;
-	Color(){
+	public Color(){
 		 Brick brick = BrickFinder.getDefault();
 		 Port s4 = brick.getPort("S4");
 		 cs = new EV3ColorSensor (s4);

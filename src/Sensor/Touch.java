@@ -7,7 +7,7 @@ import lejos.hardware.sensor.EV3TouchSensor;
 import lejos.robotics.SampleProvider;
 
 
-class Touch {
+public class Touch {
 	float[] samplePressed;
 	EV3TouchSensor ts;
 	SampleProvider touch;

@@ -1,4 +1,4 @@
-package Action;
+package Motor;
 /**
  * La classe qui agrège les actioneur : 
  *  -les pinces

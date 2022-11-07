@@ -1,3 +1,4 @@
+package Motor;
 import lejos.hardware.*;
 import lejos.hardware.motor.EV3MediumRegulatedMotor;
 import lejos.hardware.port.Port;
