@@ -1,4 +1,4 @@
-package Action;
+package Motor;
 
 import java.util.Scanner;
 
