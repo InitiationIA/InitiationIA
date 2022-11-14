@@ -40,33 +40,48 @@ public class Agent {
 	
 	
 	public void prendPremierPalet() {
+		
+		a.setVitesseAngle(a.getMaxVitesseAngle());
+		a.setVitesseLigne(a.getMaxVitesseLigne());
+		a.setAccelLigne(a.getMaxVitesseLigne());
+		a.setAccelAngle(a.getMaxVitesseAngle());
+		
 		String position = getPositionDepart();
-		double d = 20;
+		double pivot = 20;
 		
 		if (position.equals("Gauche"))
-			d = -20;
+			pivot = -20;
 		else if (position.equals("Milieu")) 
-			d = 200;
+			pivot = 200;
 		
-		System.out.println(position);	
 		p.ouvrir(360*4);
 		a.avancer(600); // mm
+		p.fermer(-360*5);
+		a.traverseArc(600, pivot);
+		a.traverseArc(-400, pivot);
+		a.avancer(Double.POSITIVE_INFINITY, true); // non bloquante -->ferme le palet et avance en même temps
+		while (true) {
+			//c.cs.fetchSample(c.sampleColor, 0);
+			//float[] tab = c.getValue();
+			
+			//System.out.println("LALA");
+			if (/*(tab[0]*100 < 15 && tab[1]*100 < 13 && tab[2]*100 < 7) || */ (d.getValue()*100 < 35)) {
+				
+				//System.out.println(tab[0]*100 +" "+ tab[1]*100 + " " + tab[2]*100);
+				a.stop();
+				//this.arret();
+				break;
+			}
+		}
+		//a.stop();
+		p.ouvrir(360*4);
+		a.avancer(-100, true); 
 		p.fermer(-360*4);
-		a.traverseArc(600, d);
-		a.traverseArc(-400, d);
-		
-		// + avancer vers l'enbut (30 cm par rapport au mur)
-		
-		
-		// si touche
-		if (t.getValue() == 1) { // ça marche pas 
-			p.fermerSurPalet();				
-			a.traverseArc(d, 180);
-	
-			//si enbut
-			avanceVersEnbut();
+		while (p.isMoving()) {
 			
 		}
+		a.stop();
+		a.tourne(180);
 		
 	}
 	
