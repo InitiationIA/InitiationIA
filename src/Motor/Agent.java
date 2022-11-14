@@ -18,11 +18,12 @@ public class Agent {
 	private final Pince p = new Pince("A");
 	private final Actionneur a = new Actionneur(vitesseLin, accLin, vitesseAng, accAng);
 	private final Touch t =  new Touch();
-	private final String[] position = {"gauche", "milieu", "droite"};
+	private final String[] position;
 	private final Distance d = new Distance();
 	//private final boolean[] sample;
 	
 	public Agent() {
+		 position = getPositionDepart();
 	}
 	/*
 	
@@ -46,7 +47,7 @@ public class Agent {
 		a.setAccelLigne(a.getMaxVitesseLigne());
 		a.setAccelAngle(a.getMaxVitesseAngle());
 		
-		String position = getPositionDepart();
+
 		double pivot = 20;
 		
 		if (position.equals("Gauche"))
@@ -149,7 +150,81 @@ public class Agent {
 		}
 		return distanceOptimal;		
 	}
-	
+
+	int findMySelf(String[] tabSampleRed) {
+		int id = 0;
+		String[] firstxy = tabSampleRed[tabSampleRed.length-1].split(";");
+		String[] lastxy = tabSampleRed[tabSampleRed.length-1].split(";");
+		int correctx = -Integer.parseInt(firstxy[0]);
+		int correcty = -Integer.parseInt(firstxy[1]);
+		int xpourcent = (1 -(Integer.parseInt(lastxy[0]) + correctx)/180) + 1;
+		int ypourcent = (1 -(Integer.parseInt(lastxy[1]) + correcty)/200) + 1 ;
+		for(int i=0;i<tabSampleRed.length;i++) {
+			String[] xy = tabSampleRed[i].split(";");
+			int x = (Integer.parseInt(xy[0])*xpourcent)/10;
+			int y = (Integer.parseInt(xy[1])*ypourcent)/10;
+			if(Math.round(x)%6==0 && Math.round(y)%5==0);
+			else {
+				return i;
+			}
+		}
+		return id;
+	}
+
+	int findNearMe(String[] tabSampleRed,int i) {
+		//if(position=="gauche")return tabSampleRed[i+1]
+		//if(position=="droite")return tabSampleRed[i-1]
+		return i;
+	}
+
+	public void  chercherInfra() {
+		CameraInfrarouge cir = new CameraInfrarouge();
+		Touch tc = new Touch();
+		while(tc.getValue()==0.0) {
+			try {
+				String[] tabSampleRed = cir.getValue();
+				int id = findMySelf(tabSampleRed);
+				int ne = findNearMe(tabSampleRed,id);
+				String[] coord = tabSampleRed[id].split(";");
+				String[] direct = tabSampleRed[ne].split(";");
+				int selfx = Integer.parseInt(coord[0]);
+				int selfy = Integer.parseInt(coord[1]);
+				int directionx = Integer.parseInt(direct[0]);
+				int directiony = Integer.parseInt(direct[1]);
+				a.avancer(10);
+				tabSampleRed = cir.getValue();
+				coord = tabSampleRed[id].split(";");
+				directionx -= Integer.parseInt(coord[0]);
+				directiony -= Integer.parseInt(coord[1]);
+				selfx = Integer.parseInt(coord[0])-selfx;
+				selfy = Integer.parseInt(coord[1])-selfy;
+				directionx = Math.abs(directionx);
+				directiony = Math.abs(directiony);
+				selfy= Math.abs(selfy);
+				selfx= Math.abs(selfx);
+				double vectself = Math.sqrt(selfx * selfx + selfy * selfy);
+				double vectdirect = Math.sqrt(directionx * directionx + directiony * directiony);//à utiliser pour arcforward(angle,distance);
+				double scalaire = directionx * selfx + directiony * selfy;
+				double angle = Math.acos(scalaire / (vectself * vectdirect));
+				angle = Math.toDegrees(angle);
+				if (selfy > directiony && position[1]=="Down") {
+					a.traverseArc(-angle, vectdirect);
+				} else if (directiony > selfy && position[1]=="Down") {
+					a.traverseArc(angle,vectdirect);
+				}else if(selfy > directiony && position[1]=="Up") {
+					a.traverseArc(angle, vectdirect);
+				}else if(selfy < directiony && position[1]=="Up") {
+					a.traverseArc(-angle, vectdirect);
+				}
+				a.avancer(10);
+				System.out.println(angle);
+				tc.getValue();
+			} catch (Exception e) {
+				continue;
+			}
+		}
+
+	}
 	
 	public void orienteVersPalet(int angle) {
 		double dist  = cherchePalet(angle);
@@ -192,14 +267,14 @@ public class Agent {
 				pressed[0] += "Droit";
 		g.clear();
 		
-		g.drawString("Coté but? le bas -> x = 0 pour capteur IR");
+		g.drawString("Coté ? le bas -> x = 0 pour capteur IR");
 		but = Button.waitForAnyPress(TITLE_DELAY);
 		if (but == 0)
 			pressed[1] = "None";
 		else if ((but & Button.ID_UP) != 0)
-        	pressed[1] = "Up";
+        	pressed[1] = "Down";
 		else if ((but & Button.ID_DOWN) != 0)
-        	pressed[1] = "Down ";
+        	pressed[1] = "Up";
 
 		g.clear();
 
