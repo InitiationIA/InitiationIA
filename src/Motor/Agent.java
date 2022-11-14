@@ -178,7 +178,7 @@ public class Agent {
 	public String[] getPositionDepart() {
 		GraphicsLCD g = BrickFinder.getDefault().getGraphicsLCD();
 		
-		g.drawString()
+		g.drawString("Ligne depart? gauche | milieu | droite")
 		
 		int but = Button.waitForAnyPress(TITLE_DELAY);
 		String[] pressed = new String[2];
