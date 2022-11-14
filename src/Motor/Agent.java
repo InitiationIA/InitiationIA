@@ -175,22 +175,34 @@ public class Agent {
 	}
 	
 	
-	public String getPositionDepart() {
+	public String[] getPositionDepart() {
 		GraphicsLCD g = BrickFinder.getDefault().getGraphicsLCD();
-
-		g.drawString("Quelle est la position de depart?\n Bouton Gauche pour ligne Gauche\n Bouton Milieu pour ligne Milieu\nBouton Droit pour ligne Droit ",0,0,0); // valeur provisoire
-
-		int but = Button.waitForAnyPress(1000000);
-		String pressed = "";
+		
+		g.drawString()
+		
+		int but = Button.waitForAnyPress(TITLE_DELAY);
+		String[] pressed = new String[2];
 		if (but == 0)
-			pressed = "None";
+                pressed[0] = "None";
 		else if ((but & Button.ID_ENTER) != 0)
-			pressed += "Milieu";
-		else if ((but & Button.ID_LEFT) != 0)
-			pressed += "Gauche";
-		else if ((but & Button.ID_RIGHT) != 0)
-			pressed += "Droit";
+				pressed[0] += "Milieu";
+          	else if ((but & Button.ID_LEFT) != 0)
+				pressed[0] += "Gauche";
+    		else if ((but & Button.ID_RIGHT) != 0)
+				pressed[0] += "Droit";
 		g.clear();
+		
+		g.drawString("Coté but? le bas -> x = 0 pour capteur IR");
+		but = Button.waitForAnyPress(TITLE_DELAY);
+		if (but == 0)
+			pressed[1] = "None";
+		else if ((but & Button.ID_UP) != 0)
+        	pressed[1] = "Up";
+		else if ((but & Button.ID_DOWN) != 0)
+        	pressed[1] = "Down ";
+
+		g.clear();
+
 		return pressed;
 	}
 	
