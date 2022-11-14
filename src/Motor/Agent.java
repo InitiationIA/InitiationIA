@@ -153,6 +153,8 @@ public class Agent {
 
 	int findMySelf(String[] tabSampleRed) {
 		int id = 0;
+		boolean bis = true;
+		if(position[1]=="Up")bis=false;
 		String[] firstxy = tabSampleRed[tabSampleRed.length-1].split(";");
 		String[] lastxy = tabSampleRed[tabSampleRed.length-1].split(";");
 		int correctx = -Integer.parseInt(firstxy[0]);
@@ -165,7 +167,8 @@ public class Agent {
 			int y = (Integer.parseInt(xy[1])*ypourcent)/10;
 			if(Math.round(x)%6==0 && Math.round(y)%5==0);
 			else {
-				return i;
+				if(bis)return i;
+				bis = true;
 			}
 		}
 		return id;
