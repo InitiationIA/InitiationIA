@@ -23,7 +23,6 @@ public class Agent {
 	//private final boolean[] sample;
 	
 	public Agent() {
-		
 	}
 	/*
 	
@@ -96,16 +95,17 @@ public class Agent {
 	
 	public void arret() {
 		p.ouvrir(50);
-		a.reculer(10);
-		a.tourne(180);
+		a.reculer(100);
+		a.tourne(90);
+		recuperePalet();
 	}
 	
 	// Sonar: trouver l'angle optimal (=le palet le plus proche)
-		public double cherchePalet() {
+		public double cherchePalet(int angle) {
 		
 		double distanceOptimal = 0;
 		//double angle =30;
-		float[] dist = new double[60];
+		double[] dist = new double[60];
 		float distance = 240;
 		int c = 0;
 				
@@ -122,7 +122,7 @@ public class Agent {
 		
 		double[] tabAngles = {30, 90, 150, 210, 270, 330};*/
 		
-		a.tourne(180);
+		a.tourne(angle);
 		while(a.estEnDeplacement()) { // récuperer les mesures
 			dist[c] = d.getValue();
 			c++;
@@ -136,9 +136,9 @@ public class Agent {
 	}
 	
 	
-	public void orienteVersPalet() {
-		float dist  = a.cherchePalet();
-		a.tourne(180);
+	public void orienteVersPalet(int angle) {
+		double dist  = cherchePalet(angle);
+		a.tourne(-angle);
 		if(d.getValue() == dist) {
 			a.stop();
 		}
@@ -146,8 +146,13 @@ public class Agent {
 		a.avancer(Double.POSITIVE_INFINITY);
 	}
 	public void recuperePalet() {
-		if (d.getValue() < 30)
-			return;
+		orienteVersPalet(180);
+		if (d.getValue() < 30) {
+			a.stop();
+			a.tourne(90);
+			a.avancer(100);
+			orienteVersPalet(360);
+			}
 		if (t.getValue() == 1) {
 			a.stop();
 			p.fermerSurPalet();
@@ -180,6 +185,7 @@ public class Agent {
 	}
 	
 	public static void main(String[] args) {
+		//a.setVitesseLigne(a.getMaxVitesseLigne());
 		Agent ag = new Agent();
 		//ag.testPince();
 		ag.prendPremierPalet();
