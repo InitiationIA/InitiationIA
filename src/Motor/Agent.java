@@ -304,7 +304,8 @@ public class Agent {
 		//a.setVitesseLigne(a.getMaxVitesseLigne());
 		Agent ag = new Agent();
 		//ag.testPince();
-		ag.prendPremierPalet();
+		//ag.prendPremierPalet();
+		ag.recuperePalet();
 	}
 
 }
