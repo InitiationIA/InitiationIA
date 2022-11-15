@@ -24,6 +24,12 @@ public class Agent {
 	
 	public Agent() {
 		 position = getPositionDepart();
+		public Agent() {
+		a.setVitesseAngle(800);
+		a.setVitesseLigne(800);
+		a.setAccelLigne(700);
+		a.setAccelAngle(700);
+	
 	}
 	/*
 	
@@ -117,17 +123,17 @@ public class Agent {
 	}
 	
 	// Sonar: trouver l'angle optimal (=le palet le plus proche)
-		public double cherchePalet(int angle) {
-		
-		double distanceOptimal = 0;
+	public double cherchePalet(int angle) {
+
+		double distanceOptimal = 240;
 		//double angle =30;
 		double[] dist = new double[60];
 		float distance = 240;
 		int c = 0;
-				
+
 		/*int i = 0;
 		while (angle!=330) {
-			
+
 			a.tourne(angle);
 			tab[i] = d.getValue();
 			angle+=60;
@@ -135,21 +141,24 @@ public class Agent {
 		}
 		a.tourne(30);
 		tab[5] = d.getValue(); 
-		
+
 		double[] tabAngles = {30, 90, 150, 210, 270, 330};*/
-		
+
 		a.tourne(angle);
+
 		while(a.estEnDeplacement()) { // récuperer les mesures
-			dist[c] = d.getValue();
+			dist[0] = d.getValue();
+			Delay.msDelay(50);
 			c++;
 		}
 		for (int j = 0; j < c; j++) { // récuperer le plus proche
-			if (dist[j] > 30 && dist[j] < distance) {
+			if (dist[j] > 30 && dist[j] < distanceOptimal) {
 				distanceOptimal = dist[j];
 				}
 		}
 		return distanceOptimal;		
 	}
+	
 
 	int findMySelf(String[] tabSampleRed) {
 		int id = 0;
@@ -231,12 +240,14 @@ public class Agent {
 	
 	public void orienteVersPalet(int angle) {
 		double dist  = cherchePalet(angle);
-		a.tourne(-angle);
+		a.tourne(-angle-90);
 		if(d.getValue() == dist) {
 			a.stop();
+			//Delay.msDelay(0); // mettre des vitesse plus lentes
 		}
+		
 		//a.tourne(cherchePalet());
-		a.avancer(Double.POSITIVE_INFINITY);
+		a.avancer(dist*10);
 	}
 	public void recuperePalet() {
 		orienteVersPalet(180);
@@ -245,7 +256,7 @@ public class Agent {
 			a.tourne(90);
 			a.avancer(100);
 			orienteVersPalet(360);
-			}
+		}
 		if (t.getValue() == 1) {
 			a.stop();
 			p.fermerSurPalet();
