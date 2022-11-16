@@ -26,9 +26,9 @@ public class Actionneur {
 
     public Actionneur() {
     	
-        wheel1 = WheeledChassis.modelWheel(new EV3LargeRegulatedMotor(BrickFinder.getDefault().getPort("B")), 56).offset(-80);
-        wheel2 = WheeledChassis.modelWheel(new EV3LargeRegulatedMotor(BrickFinder.getDefault().getPort("C")), 56).offset(80);
-        chassis = new WheeledChassis(new Wheel[] { wheel1, wheel2 }, WheeledChassis.TYPE_DIFFERENTIAL);
+        wheel1 = WheeledChassis.modelWheel(new EV3LargeRegulatedMotor(BrickFinder.getDefault().getPort("B")), 56).offset(-82);
+        wheel2 = WheeledChassis.modelWheel(new EV3LargeRegulatedMotor(BrickFinder.getDefault().getPort("C")), 56).offset(82);
+       chassis = new WheeledChassis(new Wheel[] { wheel1, wheel2 }, WheeledChassis.TYPE_DIFFERENTIAL);
        // p = new Pince("A");
         pilot = new MovePilot(chassis);
     }
