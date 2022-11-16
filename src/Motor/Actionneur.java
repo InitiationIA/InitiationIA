@@ -135,13 +135,21 @@ public class Actionneur {
   		this.pilot.travel(dis);
   	}
   		
+  	public void avancer(double dis, boolean b) {
+  		this.pilot.travel(dis, b);
+  	}
   	public void reculer(double dis) {
   		this.pilot.travel(dis);
   	}
   	
-  	public void tourne(double ang) {
+	public void tourne(double ang) {
   		this.pilot.rotate(ang);
   	}
+  	public void tourne(double ang,boolean b) {
+  		this.pilot.rotate(ang, b);
+  	}
+  	
+	
   	
   
   	
