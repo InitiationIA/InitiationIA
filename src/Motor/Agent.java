@@ -91,6 +91,48 @@ public class Agent {
 		a.tourne(180);
 		
 	}
+		
+	public void prendPalet2() {
+		int angle = 45;
+		if(position.equals("Gauche")) {
+			angle = -angle;
+				// a modifier en fonction des mesures
+				a.tourne(angle);
+				a.avancer(250);
+				p.fermer(360);
+				a.tourne(-180+angle);
+				a.avancer(200);
+				p.ouvrir(360);
+				a.reculer(100);
+				prendPalet3();
+
+		}
+		else {
+			a.tourne(angle);
+			a.avancer(250);
+			p.fermer(360);
+			a.tourne(180-angle);
+			a.avancer(200);
+			p.ouvrir(360);
+			a.reculer(100);
+			prendPalet3();
+		}
+
+
+			
+		
+	}
+	
+	public void prendPalet3(){
+		a.avancer(1000);
+		p.fermer(360);
+		a.tourne(180);
+		a.avancer(1100);
+		p.ouvrir(360);
+		a.reculer(100);
+		a.tourne(180);
+	}
+	
 	
 	public void orienteVersEnbut(double angleDepart) {
 		
