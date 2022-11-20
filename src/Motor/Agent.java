@@ -20,9 +20,14 @@ public class Agent {
 	private final Touch t =  new Touch();
 	private final String[] position;
 	private final Distance d = new Distance();
+	private final int xpourcent;
+	private final int ypourcent;
 	//private final boolean[] sample;
 	
 	public Agent() {
+		int[] constant = setConstant();
+		xpourcent = constant[0];
+		ypourcent = constant[1];
 		 position = getPositionDepart();
 		public Agent() {
 		a.setVitesseAngle(800);
@@ -166,39 +171,21 @@ public class Agent {
 	
 	// Sonar: trouver l'angle optimal (=le palet le plus proche)
 	public double cherchePalet(int angle) {
-
-		double distanceOptimal = 240;
-		//double angle =30;
-		double[] dist = new double[60];
-		float distance = 240;
-		int c = 0;
-
-		/*int i = 0;
-		while (angle!=330) {
-
-			a.tourne(angle);
-			tab[i] = d.getValue();
-			angle+=60;
-			i++;
-		}
-		a.tourne(30);
-		tab[5] = d.getValue(); 
-
-		double[] tabAngles = {30, 90, 150, 210, 270, 330};*/
-
+		double dist ;
 		a.tourne(angle);
-
 		while(a.estEnDeplacement()) { // récuperer les mesures
-			dist[0] = d.getValue();
-			Delay.msDelay(50);
-			c++;
-		}
-		for (int j = 0; j < c; j++) { // récuperer le plus proche
-			if (dist[j] > 30 && dist[j] < distanceOptimal) {
-				distanceOptimal = dist[j];
+			dist = d.getValue();
+			if(dist  == 2,55){
+				while(true){
+					dist = d.getValue();
+					if(dist < 2,40) {
+						a.stop();
+						return dist;
+					}
 				}
+			}
 		}
-		return distanceOptimal;		
+		return dist;
 	}
 	
 
@@ -206,12 +193,6 @@ public class Agent {
 		int id = 0;
 		boolean bis = true;
 		if(position[1]=="Up")bis=false;
-		String[] firstxy = tabSampleRed[tabSampleRed.length-1].split(";");
-		String[] lastxy = tabSampleRed[tabSampleRed.length-1].split(";");
-		int correctx = -Integer.parseInt(firstxy[0]);
-		int correcty = -Integer.parseInt(firstxy[1]);
-		int xpourcent = (1 -(Integer.parseInt(lastxy[0]) + correctx)/180) + 1;
-		int ypourcent = (1 -(Integer.parseInt(lastxy[1]) + correcty)/200) + 1 ;
 		for(int i=0;i<tabSampleRed.length;i++) {
 			String[] xy = tabSampleRed[i].split(";");
 			int x = (Integer.parseInt(xy[0])*xpourcent)/10;
@@ -226,8 +207,8 @@ public class Agent {
 	}
 
 	int findNearMe(String[] tabSampleRed,int i) {
-		//if(position=="gauche")return tabSampleRed[i+1]
-		//if(position=="droite")return tabSampleRed[i-1]
+		if(position[1]=="Down")i++;
+		if(position[1]=="Up")i--;
 		return i;
 	}
 
@@ -262,13 +243,15 @@ public class Agent {
 				double angle = Math.acos(scalaire / (vectself * vectdirect));
 				angle = Math.toDegrees(angle);
 				if (selfy > directiony && position[1]=="Down") {
-					a.traverseArc(-angle, vectdirect);
+					a.traverseArc(-angle, vectdirect*10);
+					angle=-angle;
 				} else if (directiony > selfy && position[1]=="Down") {
-					a.traverseArc(angle,vectdirect);
+					a.traverseArc(angle,vectdirect*10);
 				}else if(selfy > directiony && position[1]=="Up") {
-					a.traverseArc(angle, vectdirect);
+					a.traverseArc(angle, vectdirect*10);
 				}else if(selfy < directiony && position[1]=="Up") {
-					a.traverseArc(-angle, vectdirect);
+					a.traverseArc(-angle, vectdirect*10);
+					angle=-angle;
 				}
 				a.avancer(10);
 				System.out.println(angle);
@@ -277,32 +260,44 @@ public class Agent {
 				continue;
 			}
 		}
-
+		p.fermerSurPalet();
+		if(angle>0)a.traverseArc(180-angle,vectdirect*10);
+		a.traverseArc(-180-angle,vectdirect*10);
 	}
+
+	public int[] setConstant() {
+			String[] tabSampleRed;
+			try {
+				tabSampleRed = cir.getValue();
+				String[] firstxy = tabSampleRed[tabSampleRed.length - 1].split(";");
+				String[] lastxy = tabSampleRed[tabSampleRed.length - 1].split(";");
+				int correctx = -Integer.parseInt(firstxy[0]);
+				int correcty = -Integer.parseInt(firstxy[1]);
+				int xpourcent = (1 - (Integer.parseInt(lastxy[0]) + correctx) / 180) + 1;
+				int ypourcent = (1 - (Integer.parseInt(lastxy[1]) + correcty) / 200) + 1;
+				return new int[] {xpourcent,ypourcent};
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return new int[] {0,0};
+		}
 	
 	public void orienteVersPalet(int angle) {
 		double dist  = cherchePalet(angle);
-		a.tourne(-angle-90);
-		if(d.getValue() == dist) {
-			a.stop();
-			//Delay.msDelay(0); // mettre des vitesse plus lentes
-		}
-		
-		//a.tourne(cherchePalet());
-		a.avancer(dist*10);
+		a.avancer(dist*1000);
 	}
 	public void recuperePalet() {
-		orienteVersPalet(180);
-		if (d.getValue() < 30) {
-			a.stop();
-			a.tourne(90);
-			a.avancer(100);
+		orienteVersPalet(360);
+			if (t.getValue() == 1) {
+				a.stop();
+				p.fermerSurPalet();
+			}
+			while (d.getValue() < 0,30){
+				a.tourne(90);
+			}
 			orienteVersPalet(360);
-		}
-		if (t.getValue() == 1) {
-			a.stop();
-			p.fermerSurPalet();
-		}
+
+
 	}
 	
 	
