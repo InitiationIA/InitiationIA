@@ -175,7 +175,7 @@ public class Agent {
 		a.tourne(angle);
 		while(a.estEnDeplacement()) { // récuperer les mesures
 			dist = d.getValue();
-			if(dist  == 2,55){
+			if(dist  > 2,40){
 				while(true){
 					dist = d.getValue();
 					if(dist < 2,40) {
