@@ -1,16 +1,18 @@
 package Motor;
 
-import java.util.Scanner;
-
-import org.jfree.ui.tabbedui.TabbedApplet;
-import org.jfree.util.Rotation;
-
+import Sensor.CameraInfrarouge;
+import Sensor.Color;
+import Sensor.Distance;
+import Sensor.Touch;
 import lejos.hardware.BrickFinder;
 import lejos.hardware.Button;
 import lejos.hardware.lcd.GraphicsLCD;
 
+import java.io.IOException;
+
 public class Agent {
-	
+
+	private static final int TITLE_DELAY = 10000;
 	private final double vitesseLin = 200.0;
 	private final double accLin = 50.0;
 	private final double vitesseAng = 20.0;
@@ -28,28 +30,13 @@ public class Agent {
 		int[] constant = setConstant();
 		xpourcent = constant[0];
 		ypourcent = constant[1];
-		 position = getPositionDepart();
-		public Agent() {
+		position = getPositionDepart();
 		a.setVitesseAngle(800);
 		a.setVitesseLigne(800);
 		a.setAccelLigne(700);
 		a.setAccelAngle(700);
 	
 	}
-	/*
-	
-	public displayQuestion() {
-		Scanner s = new Scanner(System.in);
-		System.out.println("De quel coté du terrain êtes-vous ?: ");
-	}
-	*/
-	
-	// spécifie la position de départ: gauche, milieu, droite.
-	public void specifiePosition(String pos) {
-		
-		
-	}
-	
 	
 	public void prendPremierPalet() {
 		
@@ -59,18 +46,24 @@ public class Agent {
 		a.setAccelAngle(a.getMaxVitesseAngle());
 		
 
-		double pivot = 20;
+		double pivotDistance = 200;
+		//double rayon = 200;
 		
-		if (position.equals("Gauche"))
-			pivot = -20;
-		else if (position.equals("Milieu")) 
-			pivot = 200;
+
+
 		
 		p.ouvrir(360*4);
 		a.avancer(600); // mm
 		p.fermer(-360*5);
-		a.traverseArc(600, pivot);
-		a.traverseArc(-400, pivot);
+
+		if (position.equals("Gauche")) {
+			a.traverseArc(600, pivotDistance);
+			a.traverseArc(-400, pivotDistance);
+		} else if (position.equals("Droite")) {
+			a.traverseArc(-600, pivotDistance);
+			a.traverseArc(400, pivotDistance);
+		}
+
 		a.avancer(Double.POSITIVE_INFINITY, true); // non bloquante -->ferme le palet et avance en même temps
 		while (true) {
 			//c.cs.fetchSample(c.sampleColor, 0);
@@ -168,24 +161,25 @@ public class Agent {
 		a.tourne(90);
 		recuperePalet();
 	}
-	
+
+	// TODO: corriger cette méthode
 	// Sonar: trouver l'angle optimal (=le palet le plus proche)
 	public double cherchePalet(int angle) {
-		double dist ;
+		double dist;
 		a.tourne(angle);
 		while(a.estEnDeplacement()) { // récuperer les mesures
 			dist = d.getValue();
-			if(dist  > 2,40){
+			if(dist  > 2.40){
 				while(true){
 					dist = d.getValue();
-					if(dist < 2,40 && dist> 0.3) {
+					if(dist < 2.40 && dist> 0.3) {
 						a.stop();
 						return dist;
 					}
 				}
 			}
 		}
-		return dist;
+		return dist; // pb ici
 	}
 	
 
@@ -292,7 +286,7 @@ public class Agent {
 				a.stop();
 				p.fermerSurPalet();
 			}
-			while (d.getValue() < 0,30){
+			while (d.getValue() < 0.30){
 				a.tourne(90);
 			}
 			orienteVersPalet(360);
@@ -304,7 +298,7 @@ public class Agent {
 	public String[] getPositionDepart() {
 		GraphicsLCD g = BrickFinder.getDefault().getGraphicsLCD();
 		
-		g.drawString("Ligne depart? gauche | milieu | droite")
+		g.drawString("Ligne depart? gauche | milieu | droite",0,0,0);
 		
 		int but = Button.waitForAnyPress(TITLE_DELAY);
 		String[] pressed = new String[2];
@@ -318,7 +312,7 @@ public class Agent {
 				pressed[0] += "Droit";
 		g.clear();
 		
-		g.drawString("Coté ? le bas -> x = 0 pour capteur IR");
+		g.drawString("Coté ? le bas -> x = 0 pour capteur IR",0,0,0);
 		but = Button.waitForAnyPress(TITLE_DELAY);
 		if (but == 0)
 			pressed[1] = "None";
@@ -334,7 +328,7 @@ public class Agent {
 	
 	public void testPince() {
 		p.ouvrir(360*4); // ok
-		p.fermer(-360*5); // ok
+		p.ouvrir(-360*5); // ok
 	}
 	
 	public static void main(String[] args) {
