@@ -1,12 +1,14 @@
 package Motor;
-import lejos.hardware.*;
+
+import lejos.hardware.BrickFinder;
 import lejos.hardware.motor.EV3MediumRegulatedMotor;
-import lejos.hardware.port.Port;
 
 public class Pince extends EV3MediumRegulatedMotor implements OuvrableContinue {
 
     private boolean estOuvert; // true si pince ouvert
     private boolean paletEstAttraper; // true si les pince attrape un palet
+
+    private int angleOuverture;
 
     /**
      * 
@@ -15,36 +17,30 @@ public class Pince extends EV3MediumRegulatedMotor implements OuvrableContinue {
     public Pince(String nomPort) {
         super(BrickFinder.getDefault().getPort(nomPort));
         paletEstAttraper = false;
-        fermer();
-        super.rotateTo(ANGLE_OUVERTURE_TT);
+        angleOuverture = 0;
     }
 
     /**
      * 
      */
     public void ouvrir() {
-        ouvrir(ANGLE_OUVERTURE_TT);
+        ouvrir(ANGLE_OUVERTUVERTURE_SANS_PALET);
     }
 
     @Override
     public void ouvrir(int angle) {
         estOuvert = true;
         super.rotate(angle);
-
+        angleOuverture += angle;
     }
 
     /**
      * 
      * 
      */
-    public void fermer() {
-        fermer(ANGLE_FERMETURE_TT);
-    }
 
-    @Override
-    public void fermer(int angle) {
-        super.rotate(angle);
-        estOuvert = false;
+    public void fermer(int angle){
+        ouvrir(-Math.abs(angle));
     }
 
     /**
@@ -52,7 +48,7 @@ public class Pince extends EV3MediumRegulatedMotor implements OuvrableContinue {
      * 
      */
     public void ouvrirSurPalet() {
-        fermer(ANGLE_OUVERT_SANS_PALET);
+        ouvrir(ANGLE_OUVERTUVERTURE_SANS_PALET);
         paletEstAttraper = false;
     }
 
@@ -61,8 +57,9 @@ public class Pince extends EV3MediumRegulatedMotor implements OuvrableContinue {
      * 
      */
     public void fermerSurPalet() {
-        fermer(ANGLE_OUVERT_AVEC_PALET);
+        ouvrir(-angleOuverture);
         paletEstAttraper = true;
+        angleOuverture = 0;
     }
 
     /**
