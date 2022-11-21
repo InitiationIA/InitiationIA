@@ -178,7 +178,7 @@ public class Agent {
 			if(dist  > 2,40){
 				while(true){
 					dist = d.getValue();
-					if(dist < 2,40) {
+					if(dist < 2,40 && dist> 0.3) {
 						a.stop();
 						return dist;
 					}
