@@ -201,8 +201,8 @@ public class Agent {
 	}
 
 	int findNearMe(String[] tabSampleRed,int i) {
-		if(position[1]=="Down")i++;
-		if(position[1]=="Up")i--;
+		if(position[1].equals("Down"))i++;
+		if(position[1].equals("Up"))i--;
 		return i;
 	}
 
