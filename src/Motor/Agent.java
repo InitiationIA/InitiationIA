@@ -178,9 +178,9 @@ public class Agent {
 	 * sinon celle de gauche
 	 */
 	public void setVitesseRoue(boolean b) { 
-		if (b) a.wheel1.getMotor().setSpeed(a.wheel1.getMotor().getSpeed());
+		if (b) a.wheel1.getMotor().setSpeed(a.wheel2.getMotor().getSpeed());
 		
-		a.wheel2.getMotor().setSpeed(a.wheel2.getMotor().getSpeed());
+		a.wheel2.getMotor().setSpeed(a.wheel1.getMotor().getSpeed());
 	}
 	
 	public void orienteVersEnbut(double angleDepart) {
