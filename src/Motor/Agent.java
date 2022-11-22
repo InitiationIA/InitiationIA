@@ -31,6 +31,12 @@ public class Agent {
 		position = getPositionDepart();
 		xpourcent = constant[0];
 		ypourcent = constant[1];
+		
+		
+		a.wheel1.getMotor().getTachoCount();
+		a.wheel2.getMotor().getTachoCount();
+		// ajuster la puissance du moteur 
+		//this.setVitesseRoue(true, -50);
 	}
 	/*
 
@@ -135,6 +141,24 @@ public class Agent {
 	}
 
 
+	 */
+	public int getTachometre(boolean b) {
+		if (b)
+			return a.wheel1.getMotor().getTachoCount();
+		
+		return a.wheel2.getMotor().getTachoCount(); 
+	}
+	
+	/* 
+	 * si true, alors modifie la vitesse de la roue droite
+	 * sinon celle de gauche
+	 */
+	public void setVitesseRoue(boolean b, int vitesse) { 
+		if (b) a.wheel1.getMotor().setSpeed(vitesse);
+		
+		a.wheel2.getMotor().setSpeed(vitesse);
+	}
+	
 	public void orienteVersEnbut(double angleDepart) {
 
 		a.tourne(180 - angleDepart);
