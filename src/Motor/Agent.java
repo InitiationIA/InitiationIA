@@ -138,25 +138,49 @@ public class Agent {
 		p.ouvrir(360);
 		a.reculer(100);
 		a.tourne(180);
+		this.resetTachometre();
+		this.diffAngleTacho();
 	}
 
 
+	/*
+	 * reset les angles des tachomètres des deux roues
+	 */
+	public void resetTachometre() {
+		a.wheel1.getMotor().resetTachoCount();
+		a.wheel2.getMotor().resetTachoCount();
+		
+	}
+	
+	/*
+	 * si true alors retourne l'angle de tachomèrre de la roue droite
+	 * sinon celui de gauche
 	 */
 	public int getTachometre(boolean b) {
 		if (b)
 			return a.wheel1.getMotor().getTachoCount();
 		
 		return a.wheel2.getMotor().getTachoCount(); 
+		
+	}
+	/*
+	 * retourne la différence des angles des tachomètres 
+	 * des roues droite et gauche 
+	 */
+	public int diffAngleTacho() {
+		int a = getTachometre(true);
+		int b = getTachometre(false);
+		return a - b;
 	}
 	
 	/* 
 	 * si true, alors modifie la vitesse de la roue droite
 	 * sinon celle de gauche
 	 */
-	public void setVitesseRoue(boolean b, int vitesse) { 
-		if (b) a.wheel1.getMotor().setSpeed(vitesse);
+	public void setVitesseRoue(boolean b) { 
+		if (b) a.wheel1.getMotor().setSpeed(a.wheel1.getMotor().getSpeed());
 		
-		a.wheel2.getMotor().setSpeed(vitesse);
+		a.wheel2.getMotor().setSpeed(a.wheel2.getMotor().getSpeed());
 	}
 	
 	public void orienteVersEnbut(double angleDepart) {
