@@ -12,18 +12,21 @@ import lejos.hardware.lcd.GraphicsLCD;
 public class Agent {
 
 	private static final int TITLE_DELAY = 10000;
-	private final double vitesseLin = 200.0;
-	private final double accLin = 50.0;
-	private final double vitesseAng = 20.0;
-	private final double accAng = 10.0;
-	private final Pince p = new Pince("A");
-	private final Actionneur a = new Actionneur(vitesseLin, accLin, vitesseAng, accAng);
-	private final Touch t =  new Touch();
-	private final String[] position;
-	private final Distance d = new Distance();
+	private static final double vitesseLin = 200.0;
+	private static final double accLin = 50.0;
+	private static final double vitesseAng = 20.0;
+	private static final double accAng = 10.0;
+	private static final Pince p = new Pince("A");
+	private static final Actionneur a = new Actionneur(vitesseLin, accLin, vitesseAng, accAng);
+	private static final Touch t =  new Touch();
+	
+	private static final Distance d = new Distance();
 	private final CameraInfrarouge cir = new CameraInfrarouge();
+	private static final Color c = new Color();
+	
 	private final float xpourcent;
 	private final float ypourcent;
+	private final String[] position;
 	//private final boolean[] sample;
 
 	public Agent() {
@@ -167,8 +170,7 @@ public class Agent {
 	}
 
 	public void avanceVersEnbut(){
-		Color c = new Color();
-
+	
 		// tant qu'on n'a pas la couleur blanche
 
 

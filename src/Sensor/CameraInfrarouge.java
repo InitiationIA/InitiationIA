@@ -48,8 +48,7 @@ public class CameraInfrarouge  {
 	}
 
 	public void close() {
-		dsocket.close();
-
+		dsocket.close();*
 	}
 
 

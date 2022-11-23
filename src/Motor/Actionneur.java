@@ -18,8 +18,8 @@ public class Actionneur {
     /**
      * TODO: 
      */
-    private final Wheel wheel1 ;
-    private final Wheel wheel2 ;
+    public final Wheel wheel1 ;
+    public final Wheel wheel2 ;
     private final Chassis chassis ;
    // private final Pince p;  
     private final MovePilot pilot ;
