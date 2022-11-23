@@ -371,14 +371,15 @@ public class Agent {
 
 		int but = Button.waitForAnyPress(TITLE_DELAY);
 		String[] pressed = new String[2];
+		
 		if (but == 0)
 			pressed[0] = "None";
 		else if ((but & Button.ID_ENTER) != 0)
-			pressed[0] += "Milieu";
+			pressed[0] = "Milieu";
 		else if ((but & Button.ID_LEFT) != 0)
-			pressed[0] += "Gauche";
+			pressed[0] = "Gauche";
 		else if ((but & Button.ID_RIGHT) != 0)
-			pressed[0] += "Droit";
+			pressed[0] = "Droit";
 		g.clear();
 
 		g.drawString("Coté ? le bas -> x = 0 pour capteur IR", 0, 0, 0);
