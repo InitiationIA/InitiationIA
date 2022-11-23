@@ -54,92 +54,69 @@ public class Agent {
 
 
 	public void prendPremierPalet() {
-
+		a.tourne(-5);
 		a.setVitesseAngle(a.getMaxVitesseAngle());
 		a.setVitesseLigne(a.getMaxVitesseLigne());
 		a.setAccelLigne(a.getMaxVitesseLigne());
 		a.setAccelAngle(a.getMaxVitesseAngle());
+		p.setSpeed(p.getMaxSpeed());
+		
 
-
-		double pivot = 20;
-
-		if (position.equals("Gauche"))
-			pivot = -20;
-		else if (position.equals("Milieu"))
-			pivot = 200;
-
-		p.ouvrir(360*4);
-		a.avancer(600); // mm
-		p.fermer(-360*5);
-		a.traverseArc(600, pivot);
-		a.traverseArc(-400, pivot);
-		a.avancer(Double.POSITIVE_INFINITY); // non bloquante -->ferme le palet et avance en même temps
-		while (true) {
-			//c.cs.fetchSample(c.sampleColor, 0);
-			//float[] tab = c.getValue();
-
-			//System.out.println("LALA");
-			if (/*(tab[0]*100 < 15 && tab[1]*100 < 13 && tab[2]*100 < 7) || */ (d.getValue()*100 < 35)) {
-
-				//System.out.println(tab[0]*100 +" "+ tab[1]*100 + " " + tab[2]*100);
-				a.stop();
-				//this.arret();
-				break;
-			}
+		boolean cote = true;
+		double angle = -15;
+		double distance = 2000;
+		double angle2 = 150;
+		
+		/*else if (position.equals("Milieu")) 
+			pivot = 200;*/
+		
+		p.ouvrir(450);
+		a.avancer(630); // mm
+		p.fermer(-375);
+		if (position[0].equals("Gauche")) {
+			System.out.println("gauche");
+		    cote = false;
+		    a.tourne(12);
+		    a.avancer(1100);
+		    angle = -33;
+		    distance = 1050;
+		    angle2 = 160;
 		}
-		//a.stop();
-		p.ouvrir(360*4);
-		a.avancer(-100);
-		p.fermer(-360*4);
-		while (p.isMoving()) {
-
-		}
+		a.tourne(angle);
+		
+		a.avancer(distance);
+		
 		a.stop();
-		a.tourne(180);
-
+		p.ouvrir(540);
+		a.avancer(-100); 
+		a.stop();
+		a.tourne(angle2);
+		prendPalet2(cote);
 	}
+	public void prendPalet2(boolean cote) {
+		a.avancer(450);
+		p.fermer(-540);
+		a.tourne(140);
+		a.avancer(450);
+		p.ouvrir(540);
+		a.reculer(-100);
+		a.tourne(130);
+		prendPalet3(cote);
 
-	public void prendPalet2() {
-		int angle = 45;
-		if(position.equals("Gauche")) {
-			angle = -angle;
-			// a modifier en fonction des mesures
-			a.tourne(angle);
-			a.avancer(250);
-			p.fermer(360);
-			a.tourne(-180+angle);
-			a.avancer(200);
-			p.ouvrir(360);
-			a.reculer(100);
-			prendPalet3();
-
-		}
-		else {
-			a.tourne(angle);
-			a.avancer(250);
-			p.fermer(360);
-			a.tourne(180-angle);
-			a.avancer(200);
-			p.ouvrir(360);
-			a.reculer(100);
-			prendPalet3();
-		}
-
-
-
-
+			
+		
 	}
-
-	public void prendPalet3(){
-		a.avancer(1000);
-		p.fermer(360);
-		a.tourne(180);
+	
+	public void prendPalet3(boolean cote){
 		a.avancer(1100);
-		p.ouvrir(360);
-		a.reculer(100);
-		a.tourne(180);
-		this.resetTachometre();
-		this.diffAngleTacho();
+		p.fermer(-540);
+		a.tourne(140);
+		a.avancer(1200);
+		p.ouvrir(540);
+		a.reculer(-100);
+		if (cote == false) { a.tourne(140);}
+		else a.tourne(130);
+		p.fermer(-540);
 	}
 
 
