@@ -56,7 +56,7 @@ public class Agent {
 	}
 
 
-	public void prendPremierPalet() {
+		public void prendPremierPalet() {
 		a.tourne(-5);
 		a.setVitesseAngle(a.getMaxVitesseAngle());
 		a.setVitesseLigne(a.getMaxVitesseLigne());
@@ -64,17 +64,16 @@ public class Agent {
 		a.setAccelAngle(a.getMaxVitesseAngle());
 		p.setSpeed(p.getMaxSpeed());
 		
-
+		System.out.println(position[0]);
 		boolean cote = true;
 		double angle = -15;
 		double distance = 2000;
-		double angle2 = 150;
+		double angle2 = 153;
 		
-		/*else if (position.equals("Milieu")) 
-			pivot = 200;*/
+		
 		
 		p.ouvrir(450);
-		a.avancer(630); // mm
+		a.avancer(630);
 		p.fermer(-375);
 		if (position[0].equals("Gauche")) {
 			System.out.println("gauche");
