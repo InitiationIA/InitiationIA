@@ -116,9 +116,9 @@ public class Agent {
 		a.avancer(1200);
 		p.ouvrir(540);
 		a.reculer(-100);
-		if (cote == false) { a.tourne(140);}
-		else a.tourne(130);
-		p.fermer(-540);
+		if (cote == false) { a.tourne(270);}
+		else a.tourne(50);
+		cherchePalet(180);
 	}
 
 
@@ -345,25 +345,140 @@ public class Agent {
 		}
 		return new float[] {0,0};
 	}
-
-	public void orienteVersPalet(int angle) {
-		double dist  = cherchePalet(angle);
-		a.avancer(dist*1000);
-	}
-	public void recuperePalet() {
-		orienteVersPalet(360);
-		if (t.getValue() == 1) {
-			a.stop();
-			p.fermerSurPalet();
-		}
-		while (d.getValue() < 0.30){
-			a.tourne(90);
-		}
-		orienteVersPalet(360);
-
-
-	}
+//debut
+	public void cherchePalet(int angleMax) {// Sonar: trouver l'angle optimal (=le palet le plus proche)
+		p.ouvrir(1620);
+        double dist = 0;
+        System.out.println("dans chercher palet");
+       
+        anglett = 0;
+        while(Math.abs((anglett%360))<Math.abs(angleMax-1)) { // récuperer les mesures : -1 car (anglett%360) ne va pas à 360 donc 359
+            dist = d.getValue();
+            System.out.println(dist);
+            if(dist>= 0.30 && dist<=1.2) {//à modif le 1.2
+                        a.stop();
+                        orienteVersPalet(dist);
+                        System.out.println("Un palet");
+                        orienteVersPalet(dist);
+                }
+            a.tourne(-10);
+            anglett += -10;
+            System.out.println("pas de palets");
+            }
+        orienteVersPalet(dist);
+}
 	
+	public void orienteVersPalet(double dist1) {
+		
+        double dist  = dist1;
+        System.out.println("Dans chercher palet");
+       /* if(dist1 == 0.0) {
+        	System.out.println("===================");
+        	if(d.getValue() < 0.30){//attention au mur
+                a.tourne(-90);
+                anglett +=-90;      
+        	}*/
+        a.avancer(300);
+      
+        recuperePalet(360);
+        return;
+        }
+        //a.tourne(dist1);
+       // recuperePalet(dist);
+        //return dist;
+    
+    public void recuperePalet(double dist1) {
+        double dist = dist1;
+        double di = 0;
+        double distPrecedente = 0;
+        //di + d.getValue() = dist;
+       /*while (t.getValue() == 0 ) {while (d.getValue()<=dist) {while(true){
+        	if(di>dist) {// on est sur le palet = si touch marche vraiment pas
+        		a.stop();
+                p.fermerSurPalet();//surement à changer par p.fermer(450);
+                orienteVersEnbut();
+                return;
+        	}*/
+        while(di<dist) {
+        	/*if(distPrecedente<40) {
+        		a.avancer(30);
+        		a.stop();
+                p.fermer(-1620);
+                orienteVersEnbut();
+                return;
+        	}*/
+        		
+              	/*if(distPrecedente > 43 && d.getValue()>distPrecedente) {//palet raté car distance augmente d'un coup sans raison
+        		orienteVersPalet(360);
+                return;
+        	}
+        	if(d.getValue() < 0.20){//mur
+                a.tourne(-90);
+                anglett +=-90;
+                orienteVersPalet(360);
+            }*/
+        	distPrecedente = d.getValue();
+        	a.avancer(100);
+        	di+= 100;
+        	
+        }
+            a.stop();
+            p.fermer(-1620);//pareil
+            orienteVersEnbut();
+    }
+
+public void orienteVersEnbut() {
+		int angleRetour = 90 - (anglett % 360);
+	    a.tourne(angleRetour);
+	    avanceVersEnbut(angleRetour);
+		
+	}
+
+   
+    public void avanceVersEnbut(int angleRetour){
+		Color c = new Color();
+		float[] tab = c.getValue();
+		while (true) {// tant qu'on n'a pas la couleur blanche
+			if (tab[0]>=0.90 && tab[1]>=0.90 && tab[2]>=0.90) {
+				a.stop();
+				this.arret();
+				return;
+			}
+			if(d.getValue()<0.30) {
+				if(angleRetour<=180) {// si il est parti sur la gauche ou tout droit
+					a.tourne(-90);
+					a.avancer(15);
+					a.tourne(90);
+					
+				}
+				else {// on par du principe qu'il ne se prend pas de mur pour l'instant
+					a.tourne(-90);
+					a.avancer(15);
+					a.tourne(90);
+					
+				}
+			}
+			a.avancer(100);
+		}	
+	}
+    public void arret() {
+		p.ouvrir(1620);
+		a.reculer(100);
+		anglett = 0;
+		int m = (int)Math.random();//pour pas tourner tout le temps du même cote
+		if(m==0) { 
+			a.tourne(90);
+			//linefollower pour se remettre droit
+			a.tourne(180);
+		}
+		else{
+			a.tourne(-90);
+			//line follower pour se remettre droit
+		}
+		cherchePalet(180);
+	}
+
+	//fin
 	public double chercheMur(int angle) {
 		double dist =0;
 		a.tourne(angle);
@@ -393,7 +508,7 @@ public class Agent {
 	/*
 	 * oriente vers enbut
 	 */
-	public void orienteVersEnbut(int angle) {
+	/*public void orienteVersEnbut(int angle) {
 		
 		a.tourne(orienteVersMur(angle));
 		
@@ -408,7 +523,7 @@ public class Agent {
 		a.reculer(100);
 		a.tourne(angle*2);
 		
-	}
+	}*/
 
 	public String[] getPositionDepart() {
 		GraphicsLCD g = BrickFinder.getDefault().getGraphicsLCD();
