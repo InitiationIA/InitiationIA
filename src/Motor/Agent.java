@@ -214,7 +214,8 @@ public class Agent {
 	int findMySelf(String[] tabSampleRed,String[] tabSampleRed2,int[] pos) {
 		if(pos[1]==0)return pos[0];
 		boolean bis = true;
-		if(position[1]=="Up")bis=false;
+		if(position[1].equals("Up"))
+			bis=false;
 		int x1 = Integer.parseInt((tabSampleRed[pos[0]].split(";"))[1]);
 		int y1 = Integer.parseInt((tabSampleRed[pos[0]].split(";"))[2]);
 		int x2 = Integer.parseInt((tabSampleRed[pos[1]].split(";"))[1]);
@@ -268,8 +269,8 @@ public class Agent {
 	}
 
 	int findNearMe(String[] tabSampleRed,int i) {
-		if(position[1]=="Down")i++;
-		if(position[1]=="Up")i--;
+		if(position[1].equals("Down"))i++;
+		if(position[1.equals("Up"))i--;
 		return i;
 	}
 
