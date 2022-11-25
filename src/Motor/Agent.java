@@ -363,7 +363,52 @@ public class Agent {
 
 
 	}
+	
+	public double chercheMur(int angle) {
+		double dist =0;
+		a.tourne(angle);
+		while(a.estEnDeplacement()) { // récuperer les mesures
+			dist = d.getValue();
+			if(dist  >= 2.55){
+				while(true){
+					dist = d.getValue();
+					if(dist < 0.3) {
+						a.stop();
+						return dist;
+					}
+				}
+			}
+		}
+		return dist;
+	}
 
+	public int orienteVersMur(int angle) {
+		double dist = chercheMur(angle);
+		while (d.getValue() > 0.30) {
+			a.avancer(dist);
+		}
+		return angle;
+	}
+	
+	/*
+	 * oriente vers enbut
+	 */
+	public void orienteVersEnbut(int angle) {
+		
+		a.tourne(orienteVersMur(angle));
+		
+		float[] tab = c.getValue();
+		while (tab[0]<=0.240 && tab[1]<=0.240 && tab[2]<=0.240) {
+			System.out.println(tab[0]+"::"+ tab[2]);
+			a.avancer(Double.POSITIVE_INFINITY, true);
+			
+		}
+		a.stop();
+		p.ouvrir(360);
+		a.reculer(100);
+		a.tourne(angle*2);
+		
+	}
 
 	public String[] getPositionDepart() {
 		GraphicsLCD g = BrickFinder.getDefault().getGraphicsLCD();
