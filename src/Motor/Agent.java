@@ -480,30 +480,30 @@ public void orienteVersEnbut() {
 	}
 
 	//fin
-	public double chercheMur(int angle) {
-		double dist =0;
-		a.tourne(angle);
-		while(a.estEnDeplacement()) { // récuperer les mesures
-			dist = d.getValue();
-			if(dist  >= 2.55){
-				while(true){
-					dist = d.getValue();
-					if(dist < 0.3) {
-						a.stop();
-						return dist;
-					}
-				}
-			}
-		}
-		return dist;
+			    
+	public void chercheMur(int angleMax) {
+        double dist = 0;       
+        double anglett = 0;
+        while(Math.abs((anglett%360))<Math.abs(angleMax-1)) { 
+            dist = d.getValue();
+           // System.out.println(dist);
+            if(dist < 0.3) {
+                a.stop();
+                orienteVersMur(dist);
+                System.out.println("Un mur");
+            }
+            a.tourne(-10);
+            anglett += -10;
+            System.out.println("pas de palets");
+        }
+        orienteVersMur(dist);
 	}
 
-	public int orienteVersMur(int angle) {
-		double dist = chercheMur(angle);
-		while (d.getValue() > 0.30) {
-			a.avancer(dist);
-		}
-		return angle;
+	public void orienteVersMur(double dist1) {
+		double dist = dist1;
+		a.avancer(dist);
+		orienteVersEnbut();
+		return;
 	}
 	
 	/*
