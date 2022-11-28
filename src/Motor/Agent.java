@@ -41,22 +41,10 @@ public class Agent {
 		// ajuster la puissance du moteur 
 		//this.setVitesseRoue(true, -50);
 	}
-	/*
-
-	public displayQuestion() {
-		Scanner s = new Scanner(System.in);
-		System.out.println("De quel coté du terrain êtes-vous ?: ");
-	}
-	*/
-
-	// spécifie la position de départ: gauche, milieu, droite.
-	public void specifiePosition(String pos) {
+	
 
 
-	}
-
-
-		public void prendPremierPalet() {
+	public void prendPremierPalet() {
 		a.tourne(-5);
 		a.setVitesseAngle(a.getMaxVitesseAngle());
 		a.setVitesseLigne(a.getMaxVitesseLigne());
