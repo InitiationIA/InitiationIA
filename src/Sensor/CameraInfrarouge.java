@@ -18,6 +18,9 @@ public class CameraInfrarouge  {
 	protected byte[] buffer;
 	protected DatagramPacket packet;
 
+	/**
+	 * Constructeur de la camera infrarouge
+	 */
 	public CameraInfrarouge() {
 		int port = 8888;
 		try {
@@ -40,6 +43,10 @@ public class CameraInfrarouge  {
 		}
 	}
 
+	/**
+	 * @return un tableau de String sous la forme [id;Y;X\n]
+	 * @throws IOException si il y a une erreur de lecture du socket sur le flux
+	 */
 	public String[] getValue() throws IOException {
 		packet.setLength(buffer.length);
 		dsocket.receive(packet);
@@ -47,8 +54,12 @@ public class CameraInfrarouge  {
 		return tabSampleRed = sampleRed.split("\n");
 	}
 
+	/**
+	 * ferme le capteur
+	 */
 	public void close() {
-		dsocket.close();*
+		dsocket.close();
+
 	}
 
 

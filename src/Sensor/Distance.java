@@ -8,11 +8,15 @@ import lejos.hardware.port.Port;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.SampleProvider;
 
+
 public class Distance {
 	float[] sampleDistance;
 	EV3UltrasonicSensor us;
 	SampleProvider distance;
 
+	/**
+	 * Constructeur du capteur ultrason
+	 */
 	public Distance() {
 		Brick brick = BrickFinder.getDefault();
 		Port s1 = brick.getPort("S1");
@@ -20,7 +24,7 @@ public class Distance {
 		distance = us.getDistanceMode();
 		sampleDistance = new float[distance.sampleSize()];
 	}
-
+	
 	public void trier() {
 		float[] trie = Arrays.copyOf(sampleDistance, sampleDistance.length);
 		Arrays.sort(trie);
@@ -38,12 +42,18 @@ public class Distance {
 		sampleDistance = Arrays.copyOf(trie, c);
 	}
 
+	/**
+	 * @return la distance mesurée
+	 */
 	public float getValue() {
-		this.trier();
+		//this.trier();
 		distance.fetchSample(sampleDistance, 0);
 		return sampleDistance[0];
 	}
 
+	/**
+	 * arrete le capteur
+	 */
 	public void close() {
 		us.close();
 	}

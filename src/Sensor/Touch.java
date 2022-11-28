@@ -12,6 +12,9 @@ public class Touch {
 	EV3TouchSensor ts;
 	SampleProvider touch;
 
+	/**
+	 * constructeur du capteur correspondant au toucher
+	 */
 	public Touch() {
 		Brick brick = BrickFinder.getDefault();
 		Port s3 = brick.getPort("S3");
@@ -20,10 +23,18 @@ public class Touch {
 		samplePressed=new float[touch.sampleSize()];
 	}
 
+	/**
+	 * @return la valeur 1.0 si le capteur detecte un objet sinon 0.0
+	 */
 	public float getValue() {
 		touch.fetchSample(samplePressed, 0);
 		return samplePressed[0];
 	}
-
+	/**
+	 * ferme le capteur
+	 */
+	public void close() {
+		ts.close();
+	}
 
 }
