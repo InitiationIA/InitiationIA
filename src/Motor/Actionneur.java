@@ -1,10 +1,36 @@
 package Motor;
 
+/*
+ *  importation des packages nécessaires pour la définition de l'actionneur :
+ * 
+ *  lejos.hardware.BrickFinder : pour implémenter un serveur de noms qui peut 
+ *  répondre aux requêtes générées par les méthodes de découverte et de recherche. 
+ *  Le code utilisateur n'aura normalement pas besoin d'exécuter
+ *  une instance de ceci car le menu leJOS le fera généralement.
+ * 
+ *  lejos.hardware.motor.* : pour accéder aux moteurs pris en charge par l'EV3.
+ *  
+ *  lejos.robotics.chassis.* : pour la modélisation de véhicules à roues
+ *  
+ *  lejos.robotics.navigation.MovePilot : contient des méthodes pour contrôler les mouvements du robot : 
+ *  se déplacer vers l'avant ou vers l'arrière en ligne droite ou
+ *  sur une trajectoire circulaire ou pivoter dans une nouvelle direction. 
+ *  Cette classe fonctionnera avec n'importe quel châssis. 
+ *  Certains types de châssis peuvent ne pas prendre en charge 
+ *  tous les mouvements pris en charge par ce pilote. Un objet de cette classe suppose 
+ *  qu'il a le contrôle exclusif de ses moteurs. Si un autre objet fait des appels à ses moteurs, 
+ *  les résultats sont imprévisibles.
+ */
 import lejos.hardware.BrickFinder;
 import lejos.hardware.motor.*;
 import lejos.robotics.chassis.*;
-
 import lejos.robotics.navigation.MovePilot;
+
+
+/*
+ * Classe définissant l'actionneur:
+ * comprend deux roues, un chassis et un mécanisme de pilotage
+ */
 public class Actionneur {
     
     
@@ -15,7 +41,7 @@ public class Actionneur {
     
 
     /*
-     * Constructeurs de l'actionneur
+     * Constructeur de l'actionneur
      */
     public Actionneur() {
     	
@@ -26,14 +52,14 @@ public class Actionneur {
         
     }
 
-    public Actionneur(double vitesseLin,double accelerationLin) {
+    public Actionneur(double vitesseLin, double accelerationLin) {
         this();
         pilot.setLinearSpeed(vitesseLin);
         pilot.setLinearAcceleration(accelerationLin);
 
     }
 
-    public Actionneur(double vitesseLin,double accLin,double vitesseAng,double accAng) {
+    public Actionneur(double vitesseLin, double accLin, double vitesseAng, double accAng) {
         this();
         pilot.setLinearSpeed(vitesseLin);
         pilot.setLinearAcceleration(accLin);
