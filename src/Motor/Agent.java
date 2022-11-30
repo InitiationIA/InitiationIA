@@ -1,126 +1,57 @@
 package Motor;
 
-import java.util.ArrayList;
-
-import Sensor.CameraInfrarouge;
 import Sensor.Color;
 import Sensor.Distance;
 import Sensor.Touch;
+import Sensor.CameraInfrarouge;
+import java.util.ArrayList;
 import lejos.hardware.BrickFinder;
 import lejos.hardware.Button;
 import lejos.hardware.lcd.GraphicsLCD;
+import lejos.utility.Delay;
 public class Agent {
-
-	private static final int TITLE_DELAY = 10000;
-	private static final double vitesseLin = 200.0;
-	private static final double accLin = 50.0;
-	private static final double vitesseAng = 20.0;
-	private static final double accAng = 10.0;
-	private static final Pince p = new Pince("A");
-	private static final Actionneur a = new Actionneur(vitesseLin, accLin, vitesseAng, accAng);
-	private static final Touch t =  new Touch();
 	
-	private static final Distance d = new Distance();
-	private final CameraInfrarouge cir = new CameraInfrarouge();
-	private static final Color c = new Color();
-	
+	private static final int TITLE_DELAY = 60000;
+	private final double vitesseLin = 200.0;	
+	private final double accLin = 50.0;
+	private final double vitesseAng = 20.0;
+	private final double accAng = 10.0;
+	public final String[] position;
+	public int anglett;
 	private final float xpourcent;
 	private final float ypourcent;
-	private final String[] position;
-	//private final boolean[] sample;
-
+	
+	private final Pince p = new Pince("A");
+	private final Actionneur a = new Actionneur(vitesseLin, accLin,vitesseAng, accAng);
+	private final Touch t =  new Touch();
+	private final Distance d = new Distance();
+	private final CameraInfrarouge cir = new CameraInfrarouge();
+	private static Color c = new Color();
+	float tab = c.getValue();
+	
+	
+	
+	/*
+	 * constructeur de agent
+	 */
 	public Agent() {
 		float[] constant = setConstant();
-		position = getPositionDepart();
 		xpourcent = constant[0];
 		ypourcent = constant[1];
-		
-		
-		a.wheel1.getMotor().getTachoCount();
-		a.wheel2.getMotor().getTachoCount();
-		// ajuster la puissance du moteur 
-		//this.setVitesseRoue(true, -50);
+		p.ouvrir(700);
+		anglett = 0;
+		position = getPositionDepart();
 	}
-	
-
-
-	public void prendPremierPalet() {
-		a.tourne(-5);
-		a.setVitesseAngle(a.getMaxVitesseAngle());
-		a.setVitesseLigne(a.getMaxVitesseLigne());
-		a.setAccelLigne(a.getMaxVitesseLigne());
-		a.setAccelAngle(a.getMaxVitesseAngle());
-		p.setSpeed(p.getMaxSpeed());
-		
-		System.out.println(position[0]);
-		boolean cote = true;
-		double angle = -15;
-		double distance = 2000;
-		double angle2 = 153;
-		
-		
-		
-		p.ouvrir(450);
-		a.avancer(630);
-		p.fermer(-375);
-		if (position[0].equals("Gauche")) {
-			System.out.println("gauche");
-		    cote = false;
-		    a.tourne(12);
-		    a.avancer(1100);
-		    angle = -33;
-		    distance = 1050;
-		    angle2 = 160;
-		}
-		a.tourne(angle);
-		
-		a.avancer(distance);
-		
-		a.stop();
-		p.ouvrir(540);
-		a.avancer(-100); 
-		a.stop();
-		a.tourne(angle2);
-		prendPalet2(cote);
-	}
-	public void prendPalet2(boolean cote) {
-		a.avancer(450);
-		p.fermer(-540);
-		a.tourne(140);
-		a.avancer(450);
-		p.ouvrir(540);
-		a.reculer(-100);
-		a.tourne(130);
-		prendPalet3(cote);
-
-			
-		
-	}
-	
-	public void prendPalet3(boolean cote){
-		a.avancer(1100);
-		p.fermer(-540);
-		a.tourne(140);
-		a.avancer(1200);
-		p.ouvrir(540);
-		a.reculer(-100);
-		if (cote == false) { a.tourne(270);}
-		else a.tourne(50);
-		cherchePalet(180);
-	}
-
-
-	/*
-	 * reset les angles des tachomètres des deux roues
-	 */
+/*
+ * re-initialise les tachometre à 0
+ */
 	public void resetTachometre() {
 		a.wheel1.getMotor().resetTachoCount();
 		a.wheel2.getMotor().resetTachoCount();
-		
 	}
 	
 	/*
-	 * si true alors retourne l'angle de tachomèrre de la roue droite
+	 * si true alors retourne l'angle de tachomètre de la roue droite
 	 * sinon celui de gauche
 	 */
 	public int getTachometre(boolean b) {
@@ -139,65 +70,185 @@ public class Agent {
 		int b = getTachometre(false);
 		return a - b;
 	}
+    /*
+     * corrige la différence de vitesse entre les deux roues
+     */
+	public void setVitesseRoue() { 
+		a.wheel2.getMotor().setSpeed((int) (a.wheel2.getMotor().getMaxSpeed()*0.99));
+	}
 	
-	/* 
-	 * si true, alors modifie la vitesse de la roue droite
-	 * sinon celle de gauche
+	/*
+	 *  Récupere le premier palet en dur et appelle prendPalet2
 	 */
-	public void setVitesseRoue(boolean b) { 
-		if (b) a.wheel1.getMotor().setSpeed(a.wheel2.getMotor().getSpeed());
+	public void prendPremierPalet() {
+		a.tourne(-3);
+		a.setVitesseAngle(a.getMaxVitesseAngle());
+		a.setVitesseLigne(a.getMaxVitesseLigne());
+		a.setAccelLigne(a.getMaxVitesseLigne());
+		a.setAccelAngle(a.getMaxVitesseAngle());
+		p.setSpeed(p.getMaxSpeed());
 		
-		a.wheel2.getMotor().setSpeed(a.wheel1.getMotor().getSpeed());
+		System.out.println(position[0]);
+		boolean cote = true;
+		double angle = -16;
+		double distance = 2000;
+		double angle2 = 145;
+		
+		a.avancer(630);
+		p.fermer(-650);
+		if (position[0].equals("Gauche")) {
+			System.out.println("gauche");
+		    cote = false;
+		    a.tourne(15);
+		    a.avancer(1100);
+		    angle = -25;
+		    distance = 1050;
+		    angle2 = 145;
+		}
+		a.tourne(angle);
+		a.avancer(distance);
+		a.stop();
+		p.ouvrir(1620);
+		a.avancer(-100); 
+		a.stop();
+		a.tourne(angle2);
+		prendPalet2(cote);
+	}
+	/*
+	 *  Récupere le deuxième palet en dur et appelle prendPalet3
+	 */
+	public void prendPalet2(boolean cote) {
+		a.avancer(500);
+		p.fermer(-1620);
+		a.tourne(135);
+		a.avancer(500);
+		p.ouvrir(1620);
+		a.reculer(-100);
+		a.tourne(130);
+		prendPalet3(cote);
+	}
+	/*
+	 *  Récupere le troisième palet en dur et appelle chercherPalet avec un angle de rotation maximum de 180
+	 */
+	public void prendPalet3(boolean cote){
+		a.avancer(1100);
+		p.fermer(-1620);
+		a.tourne(140);
+		a.avancer(1200);
+		p.ouvrir(1620);
+		a.reculer(-100);
+		if (cote == false) {
+			a.tourne(170);
+			a.avancer(500);
+			a.tourne(-90);
+			a.avancer(200);
+			cherchePalet(180);
+			return;
+		}
+		else a.tourne(-80);
+		a.tourne(-90);
+		anglett += -90;
+		a.avancer(200);
+		cherchePalet(180);
 	}
 	
-	public void orienteVersEnbut(double angleDepart) {
-
-		a.tourne(180 - angleDepart);
-
+	/*
+	 * effectue un sonar avec une rotation inférieure ou égale à angleMax (180 si dans l'enbut pour ne pas chercher dans l'enbut, 360 sinon)
+	 * Si une mesure est entre 30 cm et 1m20 est récupérée, alors un appel à recuperePalet avec cette mesure est effectué
+	 * 
+	 */
+	
+	public void cherchePalet(int angleMax) {// Sonar: trouver l'angle optimal (=le palet le plus proche)
+		setVitesseRoue();
+        double dist = 0;
+        System.out.println("dans chercher palet");
+        anglett = 0;
+        while(Math.abs((anglett%360))<Math.abs(angleMax-1)) { // récuperer les mesures : -1 car (anglett%360) ne va pas à 360 donc 359
+            dist = d.getValue();
+            System.out.println(dist);
+            if(dist>= 0.30 && dist<=1.2) {
+                        a.stop();
+                        recuperePalet(dist);
+                        System.out.println("Un palet");
+                        }
+            a.tourne(-10);
+            anglett += -10;
+            System.out.println("pas de palets");
+            }
+        recuperePalet(dist);
+}
+    /*
+     * avance de 15 cm par 15 cm jusqu'à ce qu'il est avancé d'une distance plus grande que dist1, puis appelle orienteVersEnBut
+     * Si il mesure une distance inférieur à 0.20 pendant qu'il avance, alors il évite l'obstacle et appelle chercherPalet(360) pour trouver un nouveau palet
+     */
+    public void recuperePalet(double dist1) {
+        double di = 0;
+        while(true) {
+        	if(di>dist1) {
+        		a.stop();
+                p.fermer(-1620);
+                orienteVersEnbut();
+                return;
+        	}
+        	a.avancer(150);
+        	di = di + 0.150;
+        	double dv = d.getValue();
+        	if(dv < 0.20){ //permet d'éviter les collisions
+                a.tourne(-90);
+                anglett +=-90;
+                a.avancer(300);
+                cherchePalet(360);
+                return;
+        	}
+        }
+    }
+/*
+ * Calcul l'angle pour revenir à l'en but, et s'oriente en fonction de cet angle, puis appelle avance vers en but
+ */
+public void orienteVersEnbut() {
+	System.out.println("oriente vers enbut");
+		int angleRetour = 180 - (anglett % 360);
+	    a.tourne(angleRetour);
+	    avanceVersEnbut(angleRetour);
+		
 	}
 
-	public void avanceVersEnbut(){
-	
-		// tant qu'on n'a pas la couleur blanche
-
-
-		while (true) {
-			float[] tab = c.getValue();
-			if (tab[0]>=240 && tab[1]>=240 && tab[2]>=240) {
+   /*
+    * avance de 10 cm par 10 cm jusqu'à trouver une ligne blanche puis appelle arret
+    */
+    public void avanceVersEnbut(int angleRetour){
+		
+		while (true) {// tant qu'on n'a pas la couleur blanche
+			System.out.println(tab);
+			tab =c.getValue();
+			if (tab == 6.0) {
 				a.stop();
 				this.arret();
+				return;
 			}
-		}
-	}
-
-
-	public void arret() {
-		p.ouvrir(50);
-		a.reculer(100);
-		a.tourne(90);
-		recuperePalet();
-	}
-
-	// Sonar: trouver l'angle optimal (=le palet le plus proche)
-	public double cherchePalet(int angle) {
-		double dist =0;
-		a.tourne(angle);
-		while(a.estEnDeplacement()) { // récuperer les mesures
-			dist = d.getValue();
-			if(dist  >= 2.55){
-				while(true){
-					dist = d.getValue();
-					if(dist < 2.40 && dist> 0.3) {
-						a.stop();
-						return dist;
-					}
-				}
+			if(d.getValue()<0.14) {// gestion des collisions
+					a.tourne(-90);
+					a.avancer(150);
+					a.tourne(90);
 			}
-		}
-		return dist;
+			a.avancer(100);
+		}	
+	}
+    /*
+     * permet de déposer un palet dans l'enbut et de recommencer à chercher en appelant cherchePalet avec un angle de 180
+     */
+    public void arret() {
+		p.ouvrir(1620);
+		a.reculer(-100);
+		anglett = 0;
+		a.tourne(-80);
+		a.tourne(-90);
+		anglett += -90;
+		a.avancer(200);
+		cherchePalet(180);
 	}
 
-
+	
 
 	int findMySelf(String[] tabSampleRed,String[] tabSampleRed2,int[] pos) {
 		if(pos[1]==0)return pos[0];
@@ -258,7 +309,7 @@ public class Agent {
 
 	int findNearMe(String[] tabSampleRed,int i) {
 		if(position[1].equals("Down"))i++;
-		if(position[1.equals("Up"))i--;
+		if(position[1].equals("Up"))i--;
 		return i;
 	}
 
@@ -334,227 +385,32 @@ public class Agent {
 		}
 		return new float[] {0,0};
 	}
-//debut
-	public void cherchePalet(int angleMax) {// Sonar: trouver l'angle optimal (=le palet le plus proche)
-		p.ouvrir(1620);
-        double dist = 0;
-        System.out.println("dans chercher palet");
-       
-        anglett = 0;
-        while(Math.abs((anglett%360))<Math.abs(angleMax-1)) { // récuperer les mesures : -1 car (anglett%360) ne va pas à 360 donc 359
-            dist = d.getValue();
-            System.out.println(dist);
-            if(dist>= 0.30 && dist<=1.2) {//à modif le 1.2
-                        a.stop();
-                        orienteVersPalet(dist);
-                        System.out.println("Un palet");
-                        orienteVersPalet(dist);
-                }
-            a.tourne(-10);
-            anglett += -10;
-            System.out.println("pas de palets");
-            }
-        orienteVersPalet(dist);
-}
-	
-	public void orienteVersPalet(double dist1) {
-		
-        double dist  = dist1;
-        System.out.println("Dans chercher palet");
-       /* if(dist1 == 0.0) {
-        	System.out.println("===================");
-        	if(d.getValue() < 0.30){//attention au mur
-                a.tourne(-90);
-                anglett +=-90;      
-        	}*/
-        a.avancer(300);
-      
-        recuperePalet(360);
-        return;
-        }
-        //a.tourne(dist1);
-       // recuperePalet(dist);
-        //return dist;
-    
-    public void recuperePalet(double dist1) {
-        double dist = dist1;
-        double di = 0;
-        double distPrecedente = 0;
-        //di + d.getValue() = dist;
-       /*while (t.getValue() == 0 ) {while (d.getValue()<=dist) {while(true){
-        	if(di>dist) {// on est sur le palet = si touch marche vraiment pas
-        		a.stop();
-                p.fermerSurPalet();//surement à changer par p.fermer(450);
-                orienteVersEnbut();
-                return;
-        	}*/
-        while(di<dist) {
-        	/*if(distPrecedente<40) {
-        		a.avancer(30);
-        		a.stop();
-                p.fermer(-1620);
-                orienteVersEnbut();
-                return;
-        	}*/
-        		
-              	/*if(distPrecedente > 43 && d.getValue()>distPrecedente) {//palet raté car distance augmente d'un coup sans raison
-        		orienteVersPalet(360);
-                return;
-        	}
-        	if(d.getValue() < 0.20){//mur
-                a.tourne(-90);
-                anglett +=-90;
-                orienteVersPalet(360);
-            }*/
-        	distPrecedente = d.getValue();
-        	a.avancer(100);
-        	di+= 100;
-        	
-        }
-            a.stop();
-            p.fermer(-1620);//pareil
-            orienteVersEnbut();
-    }
-
-public void orienteVersEnbut() {
-		int angleRetour = 90 - (anglett % 360);
-	    a.tourne(angleRetour);
-	    avanceVersEnbut(angleRetour);
-		
-	}
-
-   
-    public void avanceVersEnbut(int angleRetour){
-		Color c = new Color();
-		float[] tab = c.getValue();
-		while (true) {// tant qu'on n'a pas la couleur blanche
-			if (tab[0]>=0.90 && tab[1]>=0.90 && tab[2]>=0.90) {
-				a.stop();
-				this.arret();
-				return;
-			}
-			if(d.getValue()<0.30) {
-				if(angleRetour<=180) {// si il est parti sur la gauche ou tout droit
-					a.tourne(-90);
-					a.avancer(15);
-					a.tourne(90);
-					
-				}
-				else {// on par du principe qu'il ne se prend pas de mur pour l'instant
-					a.tourne(-90);
-					a.avancer(15);
-					a.tourne(90);
-					
-				}
-			}
-			a.avancer(100);
-		}	
-	}
-    public void arret() {
-		p.ouvrir(1620);
-		a.reculer(100);
-		anglett = 0;
-		int m = (int)Math.random();//pour pas tourner tout le temps du même cote
-		if(m==0) { 
-			a.tourne(90);
-			//linefollower pour se remettre droit
-			a.tourne(180);
-		}
-		else{
-			a.tourne(-90);
-			//line follower pour se remettre droit
-		}
-		cherchePalet(180);
-	}
-
-	//fin
-			    
-	public void chercheMur(int angleMax) {
-        double dist = 0;       
-        double anglett = 0;
-        while(Math.abs((anglett%360))<Math.abs(angleMax-1)) { 
-            dist = d.getValue();
-           // System.out.println(dist);
-            if(dist < 0.3) {
-                a.stop();
-                orienteVersMur(dist);
-                System.out.println("Un mur");
-            }
-            a.tourne(-10);
-            anglett += -10;
-            System.out.println("pas de palets");
-        }
-        orienteVersMur(dist);
-	}
-
-	public void orienteVersMur(double dist1) {
-		double dist = dist1;
-		a.avancer(dist);
-		orienteVersEnbut();
-		return;
-	}
-	
 	/*
-	 * oriente vers enbut
+	 * retourne un tableau de string correspondant à la position de départ du robot
 	 */
-	/*public void orienteVersEnbut(int angle) {
-		
-		a.tourne(orienteVersMur(angle));
-		
-		float[] tab = c.getValue();
-		while (tab[0]<=0.240 && tab[1]<=0.240 && tab[2]<=0.240) {
-			System.out.println(tab[0]+"::"+ tab[2]);
-			a.avancer(Double.POSITIVE_INFINITY, true);
-			
-		}
-		a.stop();
-		p.ouvrir(360);
-		a.reculer(100);
-		a.tourne(angle*2);
-		
-	}*/
-
 	public String[] getPositionDepart() {
 		GraphicsLCD g = BrickFinder.getDefault().getGraphicsLCD();
-
+		
 		g.drawString("Ligne depart? gauche | milieu | droite", 0, 0, 0);
-
+		
 		int but = Button.waitForAnyPress(TITLE_DELAY);
 		String[] pressed = new String[2];
-		
 		if (but == 0)
-			pressed[0] = "None";
+                pressed[0] = "None";
 		else if ((but & Button.ID_ENTER) != 0)
-			pressed[0] = "Milieu";
-		else if ((but & Button.ID_LEFT) != 0)
-			pressed[0] = "Gauche";
-		else if ((but & Button.ID_RIGHT) != 0)
-			pressed[0] = "Droit";
-		g.clear();
-
-		g.drawString("Coté ? le bas -> x = 0 pour capteur IR", 0, 0, 0);
-		but = Button.waitForAnyPress(TITLE_DELAY);
-		if (but == 0)
-			pressed[1] = "None";
-		else if ((but & Button.ID_UP) != 0)
-			pressed[1] = "Down";
-		else if ((but & Button.ID_DOWN) != 0)
-			pressed[1] = "Up";
-
+				pressed[0] = "Milieu";
+          	else if ((but & Button.ID_LEFT) != 0)
+				pressed[0] = "Gauche";
+    		else if ((but & Button.ID_RIGHT) != 0)
+				pressed[0] = "Droit";
 		g.clear();
 
 		return pressed;
-	}
-
-	public void testPince() {
-		p.ouvrir(360*4); // ok
-		p.fermer(-360*5); // ok
-	}
-
-	public static void main(String[] args) {
-		//a.setVitesseLigne(a.getMaxVitesseLigne());
+	}	
+	
+	public static void main(String[] args) {	// main utilisé pour les matches
 		Agent ag = new Agent();
-		ag.chercherInfra();
+		ag.prendPremierPalet();	
 	}
 
 }
