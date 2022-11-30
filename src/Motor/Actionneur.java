@@ -15,7 +15,7 @@ public class Actionneur {
     
 
     /*
-     * Constructeur de l'actionneur
+     * Constructeurs de l'actionneur
      */
     public Actionneur() {
     	
