@@ -5,7 +5,7 @@ import lejos.hardware.motor.EV3MediumRegulatedMotor;
 
 /**
  * classe  décrivant le pilotage des pinces.
- * A partir de la classe moteur
+ * À partir de la classe motrice
  * @see EV3MediumRegulatedMotor
  */
 public class Pince extends EV3MediumRegulatedMotor implements Ouvrable {
