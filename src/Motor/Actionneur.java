@@ -1,35 +1,18 @@
 package Motor;
 
-/*
- *  importation des packages nécessaires pour la définition de l'actionneur :
- * 
- *  lejos.hardware.BrickFinder : pour implémenter un serveur de noms qui peut 
- *  répondre aux requêtes générées par les méthodes de découverte et de recherche. 
- *  Le code utilisateur n'aura normalement pas besoin d'exécuter
- *  une instance de ceci car le menu leJOS le fera généralement.
- * 
- *  lejos.hardware.motor.* : pour accéder aux moteurs pris en charge par l'EV3.
- *  
- *  lejos.robotics.chassis.* : pour la modélisation de véhicules à roues
- *  
- *  lejos.robotics.navigation.MovePilot : contient des méthodes pour contrôler les mouvements du robot : 
- *  se déplacer vers l'avant ou vers l'arrière en ligne droite ou
- *  sur une trajectoire circulaire ou pivoter dans une nouvelle direction. 
- *  Cette classe fonctionnera avec n'importe quel châssis. 
- *  Certains types de châssis peuvent ne pas prendre en charge 
- *  tous les mouvements pris en charge par ce pilote. Un objet de cette classe suppose 
- *  qu'il a le contrôle exclusif de ses moteurs. Si un autre objet fait des appels à ses moteurs, 
- *  les résultats sont imprévisibles.
- */
+
 import lejos.hardware.BrickFinder;
 import lejos.hardware.motor.*;
 import lejos.robotics.chassis.*;
 import lejos.robotics.navigation.MovePilot;
 
 
-/*
- * Classe définissant l'actionneur:
+
+
+/**
+ *  Classe définissant l'actionneur:
  * comprend deux roues, un chassis et un mécanisme de pilotage
+ *
  */
 public class Actionneur {
     
@@ -40,7 +23,8 @@ public class Actionneur {
     private final MovePilot pilot ;
     
 
-    /*
+    
+    /**
      * Constructeur de l'actionneur
      */
     public Actionneur() {
@@ -52,6 +36,11 @@ public class Actionneur {
         
     }
 
+    /**
+     * constructeur vitesse en cm/s
+     * @param vitesseLin
+     * @param accelerationLin
+     */
     public Actionneur(double vitesseLin, double accelerationLin) {
         this();
         pilot.setLinearSpeed(vitesseLin);
@@ -59,124 +48,157 @@ public class Actionneur {
 
     }
 
+    /**
+     * vitesse en degré/s
+     * @param vitesseLin
+     * @param accLin
+     * @param vitesseAng
+     * @param accAng
+     */
     public Actionneur(double vitesseLin, double accLin, double vitesseAng, double accAng) {
         this();
-        pilot.setLinearSpeed(vitesseLin);
-        pilot.setLinearAcceleration(accLin);
         pilot.setAngularSpeed(vitesseAng);
         pilot.setAngularAcceleration(accAng);
     }
 
     
-    /*
-     * retourne la valeur du tachomètre (en degré)
-     * de la roue gauche
+    
+    /**
+     * @return la valeur du tachomètre (en degré) de la roue droite
      */
     public double getTachometer() {
     	return wheel2.getMotor().getTachoCount();
     }
     
-	/*
-	 * retourne la valeur de l'accélération linéaire
+	
+	/**
+	 * @return  la valeur de l'accélération linéaire
 	 */
 	public double getAccelLigne() {
 	    return this.pilot.getLinearAcceleration();
 	}
 	
-	/*
+	
+	/**
 	 * modifie l'accélération linéaire 
+	 * @param acceleration nouvelle accelération linéaire
 	 */
 	public void setAccelLigne(double acceleration) {
 	    this.pilot.setLinearAcceleration(acceleration);
 	}
 
-	/*
-	 * retourne l'accélération angulaire
+	
+	/**
+	 * @return  l'accélération angulaire
 	 */
 	public double getAccelAngle() {
 	    return this.pilot.getAngularAcceleration();
 	}
 	
-	/*
-	 * modifie l'accélaration linéaire
+	
+	/**
+	 * modifie l'accelération angulaire
+	 * @param acceleration nouvelle accelération angulaire
 	 */
 	public void setAccelAngle(double acceleration) {
 	    this.pilot.setAngularAcceleration(acceleration);
 	}
 
-	/*
-	 * retourne la vitesse linéaire
+	
+	/**
+	 * @return  la vitesse linéaire
 	 */
 	public double getVitesseLigne() {
 	    return this.pilot.getLinearSpeed();
 	}  
 
-	/*
-	 * modifie la vitesse linéaire
+	
+	/**
+	 *  modifie la vitesse linéaire
+	 * @param speed nouvelle vitesse linéaire
 	 */
 	public void setVitesseLigne(double speed) {
 	    this.pilot.setLinearSpeed(speed);
 	}
 
-	/*
-	 * retourne la vitesse linéaire maximale
+	
+	/**
+	 * @return  la vitesse linéaire maximale
 	 */
 	public double getMaxVitesseLigne() {
 	    return chassis.getMaxLinearSpeed();
 	}  
 
-	/*
-	 * retourne la vitesse angulaire
+	
+	/**
+	 * @return  la vitesse angulaire
 	 */
 	public double getVitesseAngle() {
 	    return this.pilot.getAngularSpeed();
 	}
 	  
-	/*
+	
+	/**
 	 * modifie la vitesse angulaire
+	 * @param speed nouvelle vitesse angulaire
 	 */
 	public void setVitesseAngle(double speed) {
 	    this.pilot.setAngularSpeed(speed);
 	}
 	
-	/*
-	 * retourne la vitesse angulaire maximale
+	
+	/**
+	 * @return  la vitesse angulaire maximale
 	 */
 	public double getMaxVitesseAngle() {
 	    return chassis.getMaxAngularSpeed();
 	}  
 	  
 	
-	/*
+	
+	/**
 	 * modifie l'angle pendant que le robot avance en arc
+	 * @param radius 
 	 */
 	public void arcAvant(double radius) {
 	    this.pilot.arcForward(radius);
 	}
 
-	/*
+	
+	/**
 	 * modifie l'angle pendant que le robot recule en arc
+	 * @param radius
 	 */
 	public void arcArriere(double radius) {
 		this.pilot.arcBackward(radius);
 	}
 
-	/*
-	 * avance en arc selon un gradient et un angle donné 
+	
+	/**
+	 * avance en arc selon un gradient et un angle donné
+	 * @param radius
+	 * @param angle
 	 */
 	public void arcSimple(double radius, double angle) {
 		this.pilot.arc(radius, angle);
 	}
 	
-	/*
+	
+	/**
 	 * traverse en arc selon un gradient et une distance
+	 * @param radius
+	 * @param distance
 	 */
 	public void traverseArc(double radius, double distance) {
 		this.pilot.travelArc(radius, distance, false);
 	}
 
-	/*
+	
+	/**
 	 * traverse en arc selon un gradient, une distance, en synchronisant
+	 * @param radius
+	 * @param distance
+	 * @param immediateReturn
 	 */
 	public void traverseArc(double radius, double distance, boolean immediateReturn) {
 		this.pilot.arc(radius,  distance / (2 * Math.PI), immediateReturn);
@@ -184,44 +206,55 @@ public class Actionneur {
 
 
 
-	/*
-	 * arrête le mouvement du robot
-	 */
+    /**
+     * arrête le mouvement du robot
+     */
     public void stop(){
         pilot.stop();
     }
 
-    /*
-     * retourne true si le robot est 
+    
+    /**
+     * permet de savoir si le robot est en deplacement
+     * @return true si le robot est 
      * en cours de déplacement
      */
     public boolean estEnDeplacement(){
         return pilot.isMoving();
     }
     
-    /*
-     * avance le robot d'une distance donnée
-     */
+    
+  	/**
+  	 * avance le robot d'une distance donnée
+  	 * @param dis la distance à parcourir
+  	 */
   	public void avancer(double dis) {
   		this.pilot.travel(dis);
   	}
   	
-  	/*
+  
+  	/**
   	 * avance le robot d'une distance donnée, en synchronisant
+  	 * @param dis la distance donnée
+  	 * @param b true si la méthode travel doit return immédiatement
   	 */
   	public void avancer(double dis, boolean b) {
   		this.pilot.travel(dis, b);
   	}
   	
-  	/*
+  	
+  	/**
   	 * recule le robot d'une distance donnée
+  	 * @param dis distance donnée
   	 */
   	public void reculer(double dis) {
   		this.pilot.travel(dis, true);
   	}
   	
-  	/*
+  	
+  	/**
   	 * tourne le robot d'un angle donné
+  	 * @param ang l'angle donnée
   	 */
   	public void tourne(double ang) {
   		this.pilot.rotate(ang, true);

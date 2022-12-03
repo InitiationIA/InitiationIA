@@ -6,10 +6,14 @@ import lejos.hardware.port.Port;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.SampleProvider;
 
+/**
+ * @author Gabriel et Vassili
+ * Classe permettant l'utilisation du capteur de couleurs
+ */
 public class Color{
-	float[] sampleColor;
-	EV3ColorSensor cs;
-	SampleProvider csRGB;
+	private float[] sampleColor;
+	private EV3ColorSensor cs;
+	private SampleProvider csRGB;
 	/**
 	 * Constructeur du capteur de couleur
 	 */

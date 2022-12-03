@@ -9,10 +9,14 @@ import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.SampleProvider;
 
 
+/**
+ * @author Gabriel et Vassili
+ * Classe du capteur ultrason permettant de envoyer une distance 
+ */
 public class Distance {
-	float[] sampleDistance;
-	EV3UltrasonicSensor us;
-	SampleProvider distance;
+	private float[] sampleDistance;
+	private EV3UltrasonicSensor us;
+	private SampleProvider distance;
 
 	/**
 	 * Constructeur du capteur ultrason
@@ -25,6 +29,11 @@ public class Distance {
 		sampleDistance = new float[distance.sampleSize()];
 	}
 	
+	
+	/**
+	 * Fonction devant calculer la médiane des valeurs du capteur ultrason
+	 * cette fonction n'a pas été utilisé
+	 */
 	public void trier() {
 		float[] trie = Arrays.copyOf(sampleDistance, sampleDistance.length);
 		Arrays.sort(trie);

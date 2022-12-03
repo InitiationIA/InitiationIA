@@ -11,12 +11,17 @@ import lejos.hardware.port.MotorPort;
 import lejos.robotics.RegulatedMotor;
 import lejos.utility.Delay;
 
+/**
+ * @author Vassili 
+ * Classe permettant l'utilisation des données d'un camera infrarouge 
+ * via un socket
+ */
 public class CameraInfrarouge  {
-	protected String sampleRed;
-	protected DatagramSocket dsocket;
-	protected String[] tabSampleRed;
-	protected byte[] buffer;
-	protected DatagramPacket packet;
+	private String sampleRed;
+	private DatagramSocket dsocket;
+	private String[] tabSampleRed;
+	private byte[] buffer;
+	private DatagramPacket packet;
 
 	/**
 	 * Constructeur de la camera infrarouge
